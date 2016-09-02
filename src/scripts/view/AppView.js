@@ -1,4 +1,5 @@
 // import AppUI from './AppUI';
+import Ribbon from './ribbon/Ribbon';
 
 export default class AppView {
 
@@ -18,14 +19,15 @@ export default class AppView {
 
 		this.sketch.setup = () => {
 			// this.initUI();
+			this.initRibbon();
 		};
 
 		this.sketch.update = () => {
-			// this.three.update();
+			this.ribbon.update();
 		};
 
 		this.sketch.draw = () => {
-			// this.three.draw();
+			this.ribbon.draw();
 		};
 
 		this.sketch.resize = () => {
@@ -49,6 +51,10 @@ export default class AppView {
 	// initUI() {
 		// this.ui = new AppUI(this);
 	// }
+
+	initRibbon() {
+		this.ribbon = new Ribbon(this.sketch);
+	}
 
 	initReveal() {
 		Reveal.initialize({
