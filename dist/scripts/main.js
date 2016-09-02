@@ -116,11 +116,16 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // import AppUI from './AppUI';
+
+
+var _Ribbon = require('./ribbon/Ribbon');
+
+var _Ribbon2 = _interopRequireDefault(_Ribbon);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-// import AppUI from './AppUI';
 
 var AppView = function () {
 	function AppView() {
@@ -145,14 +150,15 @@ var AppView = function () {
 
 			this.sketch.setup = function () {
 				// this.initUI();
+				_this.initRibbon();
 			};
 
 			this.sketch.update = function () {
-				// this.three.update();
+				_this.ribbon.update();
 			};
 
 			this.sketch.draw = function () {
-				// this.three.draw();
+				_this.ribbon.draw();
 			};
 
 			this.sketch.resize = function () {
@@ -176,23 +182,31 @@ var AppView = function () {
 		// }
 
 	}, {
+		key: 'initRibbon',
+		value: function initRibbon() {
+			this.ribbon = new _Ribbon2.default(this.sketch);
+		}
+	}, {
 		key: 'initReveal',
 		value: function initReveal() {
 			Reveal.initialize({
 				controls: true,
 				progress: true,
-				history: true,
-				center: true,
+				// history: true,
+				// center: true,
 				transition: 'slide', // none/fade/slide/convex/concave/zoom
-				// More info https://github.com/hakimel/reveal.js#dependencies
-				dependencies: [
-					// { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-					// { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					// { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					// { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-					// { src: 'plugin/zoom-js/zoom.js', async: true },
-					// { src: 'plugin/notes/notes.js', async: true }
-				]
+				// transitionSpeed: 'fast',
+				backgroundTransition: 'slide',
+				width: '1280',
+				height: '100%',
+				dependencies: [{ src: 'scripts/reveal/lib/js/classList.js', condition: function condition() {
+						return !document.body.classList;
+					} },
+				// { src: 'reveal/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				// { src: 'reveal/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				// { src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+				// { src: 'reveal/plugin/zoom-js/zoom.js', async: true },
+				{ src: 'scripts/reveal/plugin/notes/notes.js', async: true }]
 			});
 		}
 	}]);
@@ -201,5 +215,41 @@ var AppView = function () {
 }();
 
 exports.default = AppView;
+
+},{"./ribbon/Ribbon":4}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Ribbon = function () {
+	function Ribbon(ctx) {
+		_classCallCheck(this, Ribbon);
+
+		this.ctx = ctx;
+
+		this.colorA = '#ffaa00';
+	}
+
+	_createClass(Ribbon, [{
+		key: 'update',
+		value: function update() {}
+	}, {
+		key: 'draw',
+		value: function draw() {
+			this.ctx.fillStyle = this.colorA;
+			this.ctx.fillRect(0, 0, 10, 10);
+		}
+	}]);
+
+	return Ribbon;
+}();
+
+exports.default = Ribbon;
 
 },{}]},{},[2]);
