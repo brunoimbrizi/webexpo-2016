@@ -54,17 +54,20 @@ export default class AppView {
 		Reveal.initialize({
 			controls: true,
 			progress: true,
-			history: true,
-			center: true,
+			// history: true,
+			// center: true,
 			transition: 'slide', // none/fade/slide/convex/concave/zoom
-			// More info https://github.com/hakimel/reveal.js#dependencies
+			// transitionSpeed: 'fast',
+			backgroundTransition: 'slide',
+			width: '1280',
+			height: '100%',
 			dependencies: [
-				// { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-				// { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-				// { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-				// { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-				// { src: 'plugin/zoom-js/zoom.js', async: true },
-				// { src: 'plugin/notes/notes.js', async: true }
+				{ src: 'scripts/reveal/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+				// { src: 'reveal/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				// { src: 'reveal/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+				// { src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+				// { src: 'reveal/plugin/zoom-js/zoom.js', async: true },
+				{ src: 'scripts/reveal/plugin/notes/notes.js', async: true }
 			]
 		});
 	}
