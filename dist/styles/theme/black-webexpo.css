@@ -1,9 +1,29 @@
 /**
- * Black theme for reveal.js. This is the opposite of the 'white' theme.
- *
- * By Hakim El Hattab, http://hakim.se
+ * Custom dark theme for my presentation at WebExpo 2016
+ * 
+ * By Bruno Imbrizi, http://brunoimbrizi.com
+ * 
+ * Forked from Black theme by Hakim El Hattab, http://hakim.se
  */
-@import url(../../lib/font/source-sans-pro/source-sans-pro.css);
+
+/*@import url(../../lib/font/source-sans-pro/source-sans-pro.css);*/
+
+@import 'https://fonts.googleapis.com/css?family=Monda';
+
+@font-face {
+  font-family: 'TradeGothicLTStd';
+  src: url('../../fonts/TradeGothicLTStd.eot?#iefix') format('embedded-opentype'),  url('../../fonts/TradeGothicLTStd.otf')  format('opentype'), url('../../fonts/TradeGothicLTStd.woff') format('woff'), url('../../fonts/TradeGothicLTStd.ttf')  format('truetype'), url('../../fonts/TradeGothicLTStd.svg#TradeGothicLTStd') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TradeGothicLTStd-Bold';
+  src: url('../../fonts/TradeGothicLTStd-Bold.eot?#iefix') format('embedded-opentype'),  url('../../fonts/TradeGothicLTStd-Bold.otf')  format('opentype'), url('../../fonts/TradeGothicLTStd-Bold.woff') format('woff'), url('../../fonts/TradeGothicLTStd-Bold.ttf')  format('truetype'), url('../../fonts/TradeGothicLTStd-Bold.svg#TradeGothicLTStd-Bold') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 section.has-light-background, section.has-light-background h1, section.has-light-background h2, section.has-light-background h3, section.has-light-background h4, section.has-light-background h5, section.has-light-background h6 {
   color: #222; }
 
@@ -15,8 +35,8 @@ body {
   background-color: #222; }
 
 .reveal {
-  font-family: "Source Sans Pro", Helvetica, sans-serif;
-  font-size: 38px;
+  font-family: "Monda", Helvetica, sans-serif;
+  font-size: 36px;
   font-weight: normal;
   color: #fff; }
 
@@ -24,6 +44,9 @@ body {
   color: #fff;
   background: #bee4fd;
   text-shadow: none; }
+
+.reveal .slides {
+  text-align: left; }
 
 .reveal .slides > section,
 .reveal .slides > section > section {
@@ -41,7 +64,7 @@ body {
 .reveal h6 {
   margin: 0 0 20px 0;
   color: #fff;
-  font-family: "Source Sans Pro", Helvetica, sans-serif;
+  font-family: "Monda", Helvetica, sans-serif;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: normal;
@@ -205,14 +228,14 @@ body {
  * LINKS
  *********************************************/
 .reveal a {
-  color: #42affa;
+  color: #ffaa00;
   text-decoration: none;
   -webkit-transition: color .15s ease;
   -moz-transition: color .15s ease;
   transition: color .15s ease; }
 
 .reveal a:hover {
-  color: #8dcffc;
+  color: #cc8800;
   text-shadow: none;
   border: none; }
 
@@ -281,7 +304,7 @@ body {
   background: rgba(0, 0, 0, 0.2); }
 
 .reveal .progress span {
-  background: #42affa;
+  background: #ffaa00;
   -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
   -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
   transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }
