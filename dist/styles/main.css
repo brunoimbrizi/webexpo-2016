@@ -1,0 +1,11 @@
+body {
+	margin: 0;
+	overflow: hidden;
+	background-color: #FFF;
+}
+
+#container {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
