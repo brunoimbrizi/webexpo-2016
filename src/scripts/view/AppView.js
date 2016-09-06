@@ -58,7 +58,7 @@ export default class AppView {
 
 	initReveal() {
 		Reveal.initialize({
-			controls: true,
+			controls: false,
 			progress: true,
 			// history: true,
 			// center: true,
@@ -75,6 +75,10 @@ export default class AppView {
 				// { src: 'reveal/plugin/zoom-js/zoom.js', async: true },
 				{ src: 'scripts/reveal/plugin/notes/notes.js', async: true }
 			]
+		});
+
+		Reveal.addEventListener('slidechanged', (e) => {
+			console.log('Reveal.slidechanged', e);
 		});
 	}
 }

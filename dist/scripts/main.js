@@ -190,7 +190,7 @@ var AppView = function () {
 		key: 'initReveal',
 		value: function initReveal() {
 			Reveal.initialize({
-				controls: true,
+				controls: false,
 				progress: true,
 				// history: true,
 				// center: true,
@@ -207,6 +207,10 @@ var AppView = function () {
 				// { src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
 				// { src: 'reveal/plugin/zoom-js/zoom.js', async: true },
 				{ src: 'scripts/reveal/plugin/notes/notes.js', async: true }]
+			});
+
+			Reveal.addEventListener('slidechanged', function (e) {
+				console.log('Reveal.slidechanged', e);
 			});
 		}
 	}]);
