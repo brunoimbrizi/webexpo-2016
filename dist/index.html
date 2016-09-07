@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="styles/main.css">
 		<link rel="stylesheet" href="styles/reveal.css">
 		<link rel="stylesheet" href="styles/theme/black-webexpo.css" id="theme">
+		<link rel="stylesheet" href="styles/lib/zenburn.css">
 	</head>
 	<body>
 		<div id="container" role="main"></div>
@@ -67,9 +68,76 @@
 				</section>
 				-->
 
-				<section>
-					<h2>Flash</h2>
-					<pre><code class="hljs" data-trim contenteditable>Reveal.configure({ backgroundTransition: 'zoom' })</code></pre>
+				<section data-example="0">
+					<h3>Draw a rectangle</h3>
+					<pre><code class="hljs javascript" data-trim>
+ctx.fillRect(0, 0, 10, 10);
+					</code></pre>
+				</section>
+
+				<section data-example="1">
+					<h3>Draw more rectangles</h3>
+					<pre><code class="hljs javascript" data-trim>
+for (let i = 0; i < 30; i++) {
+	ctx.beginPath();
+	ctx.rect(0, i * 50, 10, 10);
+	ctx.closePath();
+	ctx.fill();
+}
+					</code></pre>
+				</section>
+
+				<section data-example="2">
+					<h3>Draw circles</h3>
+					<pre><code class="hljs javascript" data-trim>
+for (let i = 0; i < 30; i++) {
+	ctx.beginPath();
+	ctx.arc(0, i * 50, 5, 0, Math.PI * 2);
+	ctx.closePath();
+	ctx.fill();
+}
+					</code></pre>
+				</section>
+
+				<section data-example="2">
+					<h3>Store points as objects</h3>
+					<pre><code class="hljs javascript" data-trim>
+// points: array containing 30 points
+
+for (let i = 0; i < points.length; i++) {
+	const p = points[i];
+
+	ctx.beginPath();
+	ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+	ctx.closePath();
+	ctx.fill();
+}
+					</code></pre>
+				</section>
+
+				<section data-example="3">
+					<h3>Draw lines</h3>
+					<pre><code class="hljs javascript" data-trim>
+ctx.beginPath();
+ctx.moveTo(points[0].x, points[0].y);
+
+for (let i = 1; i < points.length; i++) {
+	const pp = points[i - 1];
+	ctx.lineTo(pp.x, pp.y);
+}
+
+ctx.stroke();
+					</code></pre>
+				</section>
+
+				<section data-example="4">
+					<h3>Move points</h3>
+					<pre><code class="hljs javascript" data-trim>
+for (let i = 0; i < points.length; i++) {
+	const p = points[i];
+	p.x = Math.random() * 50 - 25;
+}
+					</code></pre>
 				</section>
 
 				<section>

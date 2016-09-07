@@ -119,9 +119,9 @@ Object.defineProperty(exports, "__esModule", {
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // import AppUI from './AppUI';
 
 
-var _Ribbon = require('./ribbon/Ribbon');
+var _ExampleRibbon = require('./examples/ExampleRibbon');
 
-var _Ribbon2 = _interopRequireDefault(_Ribbon);
+var _ExampleRibbon2 = _interopRequireDefault(_ExampleRibbon);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -150,22 +150,20 @@ var AppView = function () {
 
 			this.sketch.setup = function () {
 				// this.initUI();
-				_this.initRibbon();
+				_this.initExample();
 			};
 
 			this.sketch.update = function () {
-				_this.ribbon.update();
+				_this.example.update();
 			};
 
 			this.sketch.draw = function () {
-				_this.ribbon.draw();
+				_this.example.draw();
 			};
 
 			this.sketch.resize = function () {
 				_this.hw = _this.sketch.width / 2;
 				_this.hh = _this.sketch.height / 2;
-
-				// this.three.resize();
 			};
 
 			this.sketch.touchstart = function (e) {
@@ -182,13 +180,15 @@ var AppView = function () {
 		// }
 
 	}, {
-		key: 'initRibbon',
-		value: function initRibbon() {
-			this.ribbon = new _Ribbon2.default(this.sketch);
+		key: 'initExample',
+		value: function initExample() {
+			this.example = new _ExampleRibbon2.default(this.sketch);
 		}
 	}, {
 		key: 'initReveal',
 		value: function initReveal() {
+			var _this2 = this;
+
 			Reveal.initialize({
 				controls: false,
 				progress: true,
@@ -204,13 +204,19 @@ var AppView = function () {
 					} },
 				// { src: 'reveal/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 				// { src: 'reveal/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-				// { src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+				{ src: 'scripts/reveal/plugin/highlight/highlight.js', async: true, callback: function callback() {
+						hljs.initHighlightingOnLoad();
+					} },
 				// { src: 'reveal/plugin/zoom-js/zoom.js', async: true },
 				{ src: 'scripts/reveal/plugin/notes/notes.js', async: true }]
 			});
 
 			Reveal.addEventListener('slidechanged', function (e) {
-				console.log('Reveal.slidechanged', e);
+				// console.log('Reveal.slidechanged', e);
+				var dataExample = e.currentSlide.attributes['data-example'];
+				var state = dataExample ? parseInt(dataExample.value) : -1;
+
+				_this2.example.setState(state);
 			});
 		}
 	}]);
@@ -220,7 +226,7 @@ var AppView = function () {
 
 exports.default = AppView;
 
-},{"./ribbon/Ribbon":4}],4:[function(require,module,exports){
+},{"./examples/ExampleRibbon":4}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -231,29 +237,241 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Ribbon = function () {
-	function Ribbon(ctx) {
-		_classCallCheck(this, Ribbon);
+var ExampleRibbon = function () {
+	function ExampleRibbon(ctx) {
+		_classCallCheck(this, ExampleRibbon);
 
 		this.ctx = ctx;
 
+		this.rect = { x: 0.5, y: 0, w: 0.5, h: 1 };
 		this.colorA = '#ffaa00';
+		this.numPoints = 30;
+		this.distance = 50;
+
+		this.initPoints();
 	}
 
-	_createClass(Ribbon, [{
+	_createClass(ExampleRibbon, [{
 		key: 'update',
-		value: function update() {}
+		value: function update() {
+			switch (this.state) {
+				case 0:
+					{}
+			}
+		}
 	}, {
 		key: 'draw',
 		value: function draw() {
+			this.ctx.save();
 			this.ctx.fillStyle = this.colorA;
-			this.ctx.fillRect(0, 0, 10, 10);
+
+			switch (this.state) {
+				case 0:
+				case 1:
+					this.moveToRect(true);
+					this.drawPoints(true);
+					break;
+				case 2:
+					this.moveToRect(true);
+					this.drawPoints();
+					break;
+				case 3:
+				case 4:
+					this.moveToRect(true);
+					this.drawPoints();
+					this.drawLines();
+					break;
+				default:
+					break;
+			}
+
+			this.ctx.restore();
+		}
+	}, {
+		key: 'initPoints',
+		value: function initPoints() {
+			this.points = [];
+
+			for (var i = 0; i < this.numPoints; i++) {
+				var p = { x: 0, y: 0, vx: 0, vy: 0, angle: 0, radius: 5, index: i };
+				this.points.push(p);
+			}
+		}
+	}, {
+		key: 'moveToRect',
+		value: function moveToRect(center) {
+			// move to rect
+			this.ctx.translate(this.rect.x * this.ctx.width, this.rect.y * this.ctx.height);
+			// center in the rect
+			if (center) this.ctx.translate(this.rect.w * this.ctx.width * 0.5, this.rect.h * this.ctx.height * 0.5);
+		}
+	}, {
+		key: 'drawPoints',
+		value: function drawPoints(rect) {
+			var _iteratorNormalCompletion = true;
+			var _didIteratorError = false;
+			var _iteratorError = undefined;
+
+			try {
+				for (var _iterator = this.points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+					var p = _step.value;
+
+					this.ctx.beginPath();
+					if (rect) this.ctx.rect(p.x - p.radius, p.y - p.radius, p.radius * 2, p.radius * 2);else this.ctx.arc(p.x, p.y, p.radius, 0, TWO_PI);
+					this.ctx.closePath();
+					this.ctx.fill();
+				}
+			} catch (err) {
+				_didIteratorError = true;
+				_iteratorError = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion && _iterator.return) {
+						_iterator.return();
+					}
+				} finally {
+					if (_didIteratorError) {
+						throw _iteratorError;
+					}
+				}
+			}
+		}
+	}, {
+		key: 'drawLines',
+		value: function drawLines() {
+			this.ctx.beginPath();
+			this.ctx.moveTo(this.points[0].x, this.points[0].y);
+
+			for (var i = 0; i < this.points.length; i++) {
+				var pp = i === 0 ? this.points[0] : this.points[i - 1];
+				this.ctx.lineTo(pp.x, pp.y);
+			}
+
+			this.ctx.strokeStyle = this.colorA;
+			this.ctx.stroke();
+		}
+	}, {
+		key: 'drawCurves',
+		value: function drawCurves() {
+			this.ctx.beginPath();
+			this.ctx.moveTo(this.points[0].x, this.points[0].y);
+
+			for (var i = 0; i < this.points.length; i++) {
+				var p = this.points[i];
+				var pp = i === 0 ? p : this.points[i - 1];
+				var offset = 10;
+
+				var cp1 = { x: pp.x + cos(pp.angle + HALF_PI) * offset, y: pp.y + sin(pp.angle + HALF_PI) * offset };
+				var cp2 = { x: p.x - cos(p.angle + HALF_PI) * offset, y: p.y - sin(p.angle + HALF_PI) * offset };
+
+				this.ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, p.x, p.y);
+			}
+
+			this.ctx.strokeStyle = this.colorA;
+			this.ctx.stroke();
+		}
+	}, {
+		key: 'setState',
+		value: function setState(state) {
+			this.state = state;
+
+			var time = 1;
+			var ease = Quart.easeInOut;
+			var delay = 0;
+
+			switch (state) {
+				case 0:
+					var _iteratorNormalCompletion2 = true;
+					var _didIteratorError2 = false;
+					var _iteratorError2 = undefined;
+
+					try {
+						for (var _iterator2 = this.points[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+							var p = _step2.value;
+
+							TweenMax.to(p, time, { x: 0, y: 0, ease: ease });
+						}
+					} catch (err) {
+						_didIteratorError2 = true;
+						_iteratorError2 = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion2 && _iterator2.return) {
+								_iterator2.return();
+							}
+						} finally {
+							if (_didIteratorError2) {
+								throw _iteratorError2;
+							}
+						}
+					}
+
+					break;
+				case 1:
+				case 2:
+				case 3:
+					var _iteratorNormalCompletion3 = true;
+					var _didIteratorError3 = false;
+					var _iteratorError3 = undefined;
+
+					try {
+						for (var _iterator3 = this.points[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+							var _p = _step3.value;
+
+							delay = (this.numPoints - _p.index) * 0.02;
+							TweenMax.to(_p, time, { x: 0, y: _p.index * this.distance, ease: ease, delay: delay });
+						}
+					} catch (err) {
+						_didIteratorError3 = true;
+						_iteratorError3 = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion3 && _iterator3.return) {
+								_iterator3.return();
+							}
+						} finally {
+							if (_didIteratorError3) {
+								throw _iteratorError3;
+							}
+						}
+					}
+
+					break;
+				case 4:
+					var _iteratorNormalCompletion4 = true;
+					var _didIteratorError4 = false;
+					var _iteratorError4 = undefined;
+
+					try {
+						for (var _iterator4 = this.points[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+							var _p2 = _step4.value;
+
+							delay = _p2.index * 0.02;
+							TweenMax.to(_p2, time, { x: random(-25, 25), y: _p2.index * this.distance, ease: ease, delay: delay });
+						}
+					} catch (err) {
+						_didIteratorError4 = true;
+						_iteratorError4 = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion4 && _iterator4.return) {
+								_iterator4.return();
+							}
+						} finally {
+							if (_didIteratorError4) {
+								throw _iteratorError4;
+							}
+						}
+					}
+
+					break;
+			}
 		}
 	}]);
 
-	return Ribbon;
+	return ExampleRibbon;
 }();
 
-exports.default = Ribbon;
+exports.default = ExampleRibbon;
 
 },{}]},{},[2]);

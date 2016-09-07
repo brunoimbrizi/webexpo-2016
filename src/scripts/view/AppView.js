@@ -1,5 +1,5 @@
 // import AppUI from './AppUI';
-import Ribbon from './ribbon/Ribbon';
+import ExampleRibbon from './examples/ExampleRibbon';
 
 export default class AppView {
 
@@ -19,22 +19,20 @@ export default class AppView {
 
 		this.sketch.setup = () => {
 			// this.initUI();
-			this.initRibbon();
+			this.initExample();
 		};
 
 		this.sketch.update = () => {
-			this.ribbon.update();
+			this.example.update();
 		};
 
 		this.sketch.draw = () => {
-			this.ribbon.draw();
+			this.example.draw();
 		};
 
 		this.sketch.resize = () => {
 			this.hw = this.sketch.width / 2;
 			this.hh = this.sketch.height / 2;
-
-			// this.three.resize();
 		};
 
 		this.sketch.touchstart = (e) => {
@@ -52,8 +50,8 @@ export default class AppView {
 		// this.ui = new AppUI(this);
 	// }
 
-	initRibbon() {
-		this.ribbon = new Ribbon(this.sketch);
+	initExample() {
+		this.example = new ExampleRibbon(this.sketch);
 	}
 
 	initReveal() {
@@ -71,14 +69,18 @@ export default class AppView {
 				{ src: 'scripts/reveal/lib/js/classList.js', condition: function() { return !document.body.classList; } },
 				// { src: 'reveal/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 				// { src: 'reveal/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-				// { src: 'reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+				{ src: 'scripts/reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
 				// { src: 'reveal/plugin/zoom-js/zoom.js', async: true },
 				{ src: 'scripts/reveal/plugin/notes/notes.js', async: true }
 			]
 		});
 
 		Reveal.addEventListener('slidechanged', (e) => {
-			console.log('Reveal.slidechanged', e);
+			// console.log('Reveal.slidechanged', e);
+			const dataExample = e.currentSlide.attributes['data-example'];
+			const state = (dataExample) ? parseInt(dataExample.value) : -1;
+			
+			this.example.setState(state);
 		});
 	}
 }
