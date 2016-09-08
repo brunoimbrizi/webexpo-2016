@@ -247,6 +247,8 @@ var ExampleRibbon = function () {
 		this.colorA = '#ffaa00';
 		this.numPoints = 30;
 		this.distance = 50;
+		this.distanceSq = this.distance * this.distance;
+		this.damp = 0.9;
 
 		this.initPoints();
 	}
@@ -255,8 +257,43 @@ var ExampleRibbon = function () {
 		key: 'update',
 		value: function update() {
 			switch (this.state) {
-				case 0:
-					{}
+				case 5:
+					this.followMouse(true);
+
+					for (var i = this.points.length - 1; i > 0; i--) {
+						var p = this.points[i];
+						var pp = i === 0 ? p : this.points[i - 1];
+
+						p.vx *= this.damp;
+						p.vy *= this.damp;
+
+						p.x += p.vx;
+						p.y += p.vy;
+
+						var ox = p.x;
+						var oy = p.y;
+
+						var dx = p.x - pp.x;
+						var dy = p.y - pp.y;
+						var dd = dx * dx + dy * dy;
+
+						if (dd > this.distanceSq) {
+							var a = atan2(dy, dx);
+
+							// p.x = pp.x + this.distance * cos(a);
+							// p.y = pp.y + this.distance * sin(a);
+
+							p.x += (pp.x + this.distance * cos(a) - p.x) * 0.01;
+							p.y += (pp.y + this.distance * sin(a) - p.y) * 0.01;
+
+							// p.vx += (p.x - ox) * .1;
+							// p.vy += (p.y - oy) * .1;
+						}
+					}
+					break;
+				default:
+					this.followMouse(false);
+					break;
 			}
 		}
 	}, {
@@ -277,6 +314,11 @@ var ExampleRibbon = function () {
 					break;
 				case 3:
 				case 4:
+					this.moveToRect(true);
+					this.drawPoints();
+					this.drawLines();
+					break;
+				case 5:
 					this.moveToRect(true);
 					this.drawPoints();
 					this.drawLines();
@@ -342,7 +384,7 @@ var ExampleRibbon = function () {
 			this.ctx.beginPath();
 			this.ctx.moveTo(this.points[0].x, this.points[0].y);
 
-			for (var i = 0; i < this.points.length; i++) {
+			for (var i = 0; i <= this.points.length; i++) {
 				var pp = i === 0 ? this.points[0] : this.points[i - 1];
 				this.ctx.lineTo(pp.x, pp.y);
 			}
@@ -369,6 +411,17 @@ var ExampleRibbon = function () {
 
 			this.ctx.strokeStyle = this.colorA;
 			this.ctx.stroke();
+		}
+	}, {
+		key: 'followMouse',
+		value: function followMouse(follow) {
+			document.querySelector('.reveal').style.pointerEvents = follow ? 'none' : '';
+			if (!follow) return;
+
+			// if (this.ctx.mouse.x > this.rect.x * this.ctx.width && this.ctx.mouse.y > this.rect.y * this.ctx.height) {
+			this.points[0].x = this.ctx.mouse.x - this.rect.x * this.ctx.width - this.rect.w * this.ctx.width * 0.5;
+			this.points[0].y = this.ctx.mouse.y - this.rect.y * this.ctx.height - this.rect.h * this.ctx.height * 0.5;
+			// }
 		}
 	}, {
 		key: 'setState',

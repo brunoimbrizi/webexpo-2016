@@ -121,7 +121,7 @@ for (let i = 0; i < points.length; i++) {
 ctx.beginPath();
 ctx.moveTo(points[0].x, points[0].y);
 
-for (let i = 1; i < points.length; i++) {
+for (let i = 1; i <= points.length; i++) {
 	const pp = points[i - 1];
 	ctx.lineTo(pp.x, pp.y);
 }
@@ -138,6 +138,10 @@ for (let i = 0; i < points.length; i++) {
 	p.x = Math.random() * 50 - 25;
 }
 					</code></pre>
+				</section>
+
+				<section data-example="5">
+					<h3>Move points</h3>
 				</section>
 
 				<section>
