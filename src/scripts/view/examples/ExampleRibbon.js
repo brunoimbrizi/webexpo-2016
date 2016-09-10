@@ -11,6 +11,7 @@ export default class ExampleRibbon {
 		this.distance = 50;
 		this.distanceSq = this.distance * this.distance;
 		this.damp = 0.9;
+		this.radius = 5;
 
 		this.initPoints();
 	}
@@ -31,6 +32,7 @@ export default class ExampleRibbon {
 			case 8:
 			case 9:
 			case 10:
+			case 11:
 				this.followMouse(true);
 				this.updateElastic();
 				break;
@@ -44,14 +46,14 @@ export default class ExampleRibbon {
 		this.ctx.save();
 		this.ctx.fillStyle = this.color;
 
+		this.moveToRect(true);
+
 		switch(this.state) {
 			case 0:
 			case 1:
-				this.moveToRect(true);
 				this.drawPoints(true);
 				break;
 			case 2:
-				this.moveToRect(true);
 				this.drawPoints();
 				break;
 			case 3:
@@ -60,11 +62,14 @@ export default class ExampleRibbon {
 			case 6:
 			case 7:
 			case 8:
-			case 9:
-			case 10:
-				this.moveToRect(true);
 				this.drawPoints();
 				this.drawLines();
+				break;
+			case 9:
+			case 10:
+			case 11:
+				this.drawPoints();
+				this.drawCurves();
 				break;
 			default:
 				break;
@@ -93,7 +98,7 @@ export default class ExampleRibbon {
 		for (let p of this.points) {
 			this.ctx.beginPath();
 			if (rect) this.ctx.rect(p.x - p.radius, p.y - p.radius, p.radius * 2, p.radius * 2);
-			else this.ctx.arc(p.x, p.y, p.radius, 0, TWO_PI);
+			else this.ctx.arc(p.x, p.y, this.radius, 0, TWO_PI);
 			this.ctx.closePath();
 			this.ctx.fill();
 		}
@@ -194,6 +199,7 @@ export default class ExampleRibbon {
 
 		this.ctx.autoclear = true;
 		this.colorFill = this.color = this.colorA;
+		this.radius = 5;
 
 		let time = 1;
 		let ease = Quart.easeInOut;
@@ -220,11 +226,12 @@ export default class ExampleRibbon {
 					TweenMax.to(p, time, { x: random(-25, 25), y: p.index * this.distance, ease, delay });
 				}
 				break;
-			case 10:
+			case 11:
 				this.ctx.clear();
 				this.ctx.globalCompositeOperation = 'lighter';
 				this.color = this.colorB;
-			case 9:
+				this.radius = 2;
+			case 10:
 				this.ctx.clear();
 				this.ctx.autoclear = false;
 				break;
