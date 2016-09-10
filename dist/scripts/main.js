@@ -173,6 +173,10 @@ var AppView = function () {
 			this.sketch.touchmove = function () {};
 
 			this.sketch.touchend = function () {};
+
+			this.sketch.keyup = function (e) {
+				if (e.keyCode === 67) _this.sketch.clear(); // C
+			};
 		}
 
 		// initUI() {
@@ -245,6 +249,8 @@ var ExampleRibbon = function () {
 
 		this.rect = { x: 0.5, y: 0, w: 0.5, h: 1 };
 		this.colorA = '#ffaa00';
+		this.colorB = 'rgba(255, 170, 0, 0.1)';
+
 		this.numPoints = 30;
 		this.distance = 50;
 		this.distanceSq = this.distance * this.distance;
@@ -258,38 +264,21 @@ var ExampleRibbon = function () {
 		value: function update() {
 			switch (this.state) {
 				case 5:
+					this.followMouse(true, true);
+					break;
+				case 6:
+					this.followMouse(true, true);
+					this.updateDry(0, 2);
+					break;
+				case 7:
 					this.followMouse(true);
-
-					for (var i = this.points.length - 1; i > 0; i--) {
-						var p = this.points[i];
-						var pp = i === 0 ? p : this.points[i - 1];
-
-						p.vx *= this.damp;
-						p.vy *= this.damp;
-
-						p.x += p.vx;
-						p.y += p.vy;
-
-						var ox = p.x;
-						var oy = p.y;
-
-						var dx = p.x - pp.x;
-						var dy = p.y - pp.y;
-						var dd = dx * dx + dy * dy;
-
-						if (dd > this.distanceSq) {
-							var a = atan2(dy, dx);
-
-							// p.x = pp.x + this.distance * cos(a);
-							// p.y = pp.y + this.distance * sin(a);
-
-							p.x += (pp.x + this.distance * cos(a) - p.x) * 0.01;
-							p.y += (pp.y + this.distance * sin(a) - p.y) * 0.01;
-
-							// p.vx += (p.x - ox) * .1;
-							// p.vy += (p.y - oy) * .1;
-						}
-					}
+					this.updateDry(1, this.points.length);
+					break;
+				case 8:
+				case 9:
+				case 10:
+					this.followMouse(true);
+					this.updateElastic();
 					break;
 				default:
 					this.followMouse(false);
@@ -300,7 +289,7 @@ var ExampleRibbon = function () {
 		key: 'draw',
 		value: function draw() {
 			this.ctx.save();
-			this.ctx.fillStyle = this.colorA;
+			this.ctx.fillStyle = this.color;
 
 			switch (this.state) {
 				case 0:
@@ -314,11 +303,12 @@ var ExampleRibbon = function () {
 					break;
 				case 3:
 				case 4:
-					this.moveToRect(true);
-					this.drawPoints();
-					this.drawLines();
-					break;
 				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+				case 10:
 					this.moveToRect(true);
 					this.drawPoints();
 					this.drawLines();
@@ -389,7 +379,7 @@ var ExampleRibbon = function () {
 				this.ctx.lineTo(pp.x, pp.y);
 			}
 
-			this.ctx.strokeStyle = this.colorA;
+			this.ctx.strokeStyle = this.color;
 			this.ctx.stroke();
 		}
 	}, {
@@ -409,24 +399,77 @@ var ExampleRibbon = function () {
 				this.ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, p.x, p.y);
 			}
 
-			this.ctx.strokeStyle = this.colorA;
+			this.ctx.strokeStyle = this.color;
 			this.ctx.stroke();
 		}
 	}, {
 		key: 'followMouse',
-		value: function followMouse(follow) {
+		value: function followMouse(follow, useRect) {
 			document.querySelector('.reveal').style.pointerEvents = follow ? 'none' : '';
 			if (!follow) return;
 
-			// if (this.ctx.mouse.x > this.rect.x * this.ctx.width && this.ctx.mouse.y > this.rect.y * this.ctx.height) {
+			if (useRect && this.ctx.mouse.x < this.rect.x * this.ctx.width) return;
+
 			this.points[0].x = this.ctx.mouse.x - this.rect.x * this.ctx.width - this.rect.w * this.ctx.width * 0.5;
 			this.points[0].y = this.ctx.mouse.y - this.rect.y * this.ctx.height - this.rect.h * this.ctx.height * 0.5;
-			// }
+		}
+	}, {
+		key: 'updateDry',
+		value: function updateDry(start, end) {
+			for (var i = start; i < end; i++) {
+				var p = this.points[i];
+				var pp = i === 0 ? p : this.points[i - 1];
+
+				var dx = p.x - pp.x;
+				var dy = p.y - pp.y;
+				var dd = dx * dx + dy * dy;
+
+				if (dd > this.distanceSq) {
+					var a = atan2(dy, dx);
+
+					p.x = pp.x + this.distance * cos(a);
+					p.y = pp.y + this.distance * sin(a);
+				}
+			}
+		}
+	}, {
+		key: 'updateElastic',
+		value: function updateElastic() {
+			for (var i = this.points.length - 1; i > 0; i--) {
+				var p = this.points[i];
+				var pp = i === 0 ? p : this.points[i - 1];
+
+				p.vx *= this.damp;
+				p.vy *= this.damp;
+
+				p.x += p.vx;
+				p.y += p.vy;
+
+				var ox = p.x;
+				var oy = p.y;
+
+				var dx = p.x - pp.x;
+				var dy = p.y - pp.y;
+				var dd = dx * dx + dy * dy;
+
+				if (dd > this.distanceSq) {
+					var a = atan2(dy, dx);
+
+					p.x = pp.x + this.distance * cos(a);
+					p.y = pp.y + this.distance * sin(a);
+
+					p.vx += (p.x - ox) * 0.1;
+					p.vy += (p.y - oy) * 0.1;
+				}
+			}
 		}
 	}, {
 		key: 'setState',
 		value: function setState(state) {
 			this.state = state;
+
+			this.ctx.autoclear = true;
+			this.colorFill = this.color = this.colorA;
 
 			var time = 1;
 			var ease = Quart.easeInOut;
@@ -471,7 +514,8 @@ var ExampleRibbon = function () {
 						for (var _iterator3 = this.points[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
 							var _p = _step3.value;
 
-							delay = (this.numPoints - _p.index) * 0.02;
+							delay = (this.numPoints - _p.index) * 0.05;
+							ease = Back.easeOut;
 							TweenMax.to(_p, time, { x: 0, y: _p.index * this.distance, ease: ease, delay: delay });
 						}
 					} catch (err) {
@@ -517,6 +561,14 @@ var ExampleRibbon = function () {
 						}
 					}
 
+					break;
+				case 10:
+					this.ctx.clear();
+					this.ctx.globalCompositeOperation = 'lighter';
+					this.color = this.colorB;
+				case 9:
+					this.ctx.clear();
+					this.ctx.autoclear = false;
 					break;
 			}
 		}

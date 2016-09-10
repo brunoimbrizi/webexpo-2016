@@ -44,6 +44,10 @@ export default class AppView {
 
 		this.sketch.touchend = () => {
 		};
+
+		this.sketch.keyup = (e) => {
+			if (e.keyCode === 67) this.sketch.clear(); // C
+		};
 	}
 
 	// initUI() {

@@ -66,7 +66,6 @@
 				<section data-background="img/flash-01.jpg">
 					<h2>Flash</h2>
 				</section>
-				-->
 
 				<section data-example="0">
 					<h3>Draw a rectangle</h3>
@@ -129,6 +128,7 @@ for (let i = 1; i <= points.length; i++) {
 ctx.stroke();
 					</code></pre>
 				</section>
+				-->
 
 				<section data-example="4">
 					<h3>Move points</h3>
@@ -141,7 +141,98 @@ for (let i = 0; i < points.length; i++) {
 				</section>
 
 				<section data-example="5">
-					<h3>Move points</h3>
+					<h3>Follow mouse</h3>
+					<pre><code class="hljs javascript" data-trim>
+const p = points[0];
+p.x = mouse.x;
+p.y = mouse.y;
+					</code></pre>
+				</section>
+
+				<section data-example="6">
+					<h3>Keep a constant distance</h3>
+					<pre><code class="hljs javascript" data-trim>
+const distance = 50;
+
+const p0 = points[0];
+const p1 = points[1];
+
+const dx = p1.x - p0.x;
+const dy = p1.y - p0.y;
+const dd = Math.sqrt(dx * dx + dy * dy);
+
+if (dd > distance) {
+	const angle = atan2(dy, dx);
+
+	p1.x = p0.x + distance * cos(angle);
+	p1.y = p0.y + distance * sin(angle);
+}
+					</code></pre>
+				</section>
+
+				<section data-example="7">
+					<h3>Apply to all</h3>
+					<pre><code class="hljs javascript" data-trim>
+for (let i = 1; i < points.length; i++) {
+	const pp = points[i - 1];
+	const p = points[i];
+
+	const dx = p.x - pp.x;
+	const dy = p.y - pp.y;
+	const dd = Math.sqrt(dx * dx + dy * dy);
+
+	if (dd > distance) {
+		const angle = atan2(dy, dx);
+
+		p.x = pp.x + distance * cos(angle);
+		p.y = pp.y + distance * sin(angle);
+	}
+}
+					</code></pre>
+				</section>
+
+				<section data-example="8">
+					<h3>Make it elastic</h3>
+					<pre><code class="hljs javascript" data-trim>
+for (let i = points.length - 1; i > 0; i--) {
+	// define pp, p, dx, dy, dd as before
+	
+	p.vx *= 0.9;
+	p.vy *= 0.9;
+
+	p.x += p.vx;
+	p.y += p.vy;
+					</code></pre>
+				</section>
+
+				<section data-example="8">
+					<h3>Make it elastic</h3>
+					<pre><code class="hljs javascript" data-trim>
+const ox = p.x;
+const oy = p.y;	
+
+if (dd > distance) {
+	const angle = atan2(dy, dx);
+
+	p.x = pp.x + distance * cos(angle);
+	p.y = pp.y + distance * sin(angle);
+
+	p.vx += (p.x - ox) * 0.1;
+	p.vy += (p.y - oy) * 0.1;
+}
+					</code></pre>
+				</section>
+
+				<section data-example="9">
+					<h3>Stop clearing the canvas</h3>
+				</section>
+
+				<section data-example="10">
+					<h3>Adjust the colors</h3>
+					<pre><code class="hljs javascript" data-trim>
+ctx.globalCompositeOperation = 'lighter';
+ctx.strokeStyle = 'rgba(255, 170, 0, 0.1)';
+					</code></pre>
 				</section>
 
 				<section>

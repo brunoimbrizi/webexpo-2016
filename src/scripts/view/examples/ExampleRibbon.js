@@ -5,6 +5,8 @@ export default class ExampleRibbon {
 
 		this.rect = { x: 0.5, y: 0, w: 0.5, h: 1 };
 		this.colorA = '#ffaa00';
+		this.colorB = 'rgba(255, 170, 0, 0.1)';
+		
 		this.numPoints = 30;
 		this.distance = 50;
 		this.distanceSq = this.distance * this.distance;
@@ -16,38 +18,21 @@ export default class ExampleRibbon {
 	update() {
 		switch(this.state) {
 			case 5:
+				this.followMouse(true, true);
+				break;
+			case 6:
+				this.followMouse(true, true);
+				this.updateDry(0, 2);
+				break;
+			case 7:
 				this.followMouse(true);
-
-				for (let i = this.points.length - 1; i > 0; i--) {
-					const p = this.points[i];
-					const pp = (i === 0) ? p : this.points[i - 1];
-
-					p.vx *= this.damp;
-					p.vy *= this.damp;
-
-					p.x += p.vx;
-					p.y += p.vy;
-
-					const ox = p.x;
-					const oy = p.y;
-
-					const dx = p.x - pp.x;
-					const dy = p.y - pp.y;
-					const dd = dx * dx + dy * dy;
-
-					if (dd > this.distanceSq) {
-						const a = atan2(dy, dx);
-
-						// p.x = pp.x + this.distance * cos(a);
-						// p.y = pp.y + this.distance * sin(a);
-
-						p.x += (pp.x + this.distance * cos(a) - p.x) * 0.01;
-						p.y += (pp.y + this.distance * sin(a) - p.y) * 0.01;
-
-						// p.vx += (p.x - ox) * .1;
-						// p.vy += (p.y - oy) * .1;
-					}
-				}
+				this.updateDry(1, this.points.length);
+				break;
+			case 8:
+			case 9:
+			case 10:
+				this.followMouse(true);
+				this.updateElastic();
 				break;
 			default:
 				this.followMouse(false);
@@ -57,7 +42,7 @@ export default class ExampleRibbon {
 
 	draw() {
 		this.ctx.save();
-		this.ctx.fillStyle = this.colorA;
+		this.ctx.fillStyle = this.color;
 
 		switch(this.state) {
 			case 0:
@@ -71,11 +56,12 @@ export default class ExampleRibbon {
 				break;
 			case 3:
 			case 4:
-				this.moveToRect(true);
-				this.drawPoints();
-				this.drawLines();
-				break;
 			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+			case 10:
 				this.moveToRect(true);
 				this.drawPoints();
 				this.drawLines();
@@ -122,7 +108,7 @@ export default class ExampleRibbon {
 			this.ctx.lineTo(pp.x, pp.y);
 		}
 
-		this.ctx.strokeStyle = this.colorA;
+		this.ctx.strokeStyle = this.color;
 		this.ctx.stroke();
 	}
 
@@ -141,22 +127,73 @@ export default class ExampleRibbon {
 			this.ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, p.x, p.y);
 		}
 
-		this.ctx.strokeStyle = this.colorA;
+		this.ctx.strokeStyle = this.color;
 		this.ctx.stroke();
 	}
 
-	followMouse(follow) {
+	followMouse(follow, useRect) {
 		document.querySelector('.reveal').style.pointerEvents = (follow) ? 'none' : '';
 		if (!follow) return;
 
-		// if (this.ctx.mouse.x > this.rect.x * this.ctx.width && this.ctx.mouse.y > this.rect.y * this.ctx.height) {
+		if (useRect && this.ctx.mouse.x < this.rect.x * this.ctx.width) return;
+
 		this.points[0].x = this.ctx.mouse.x - this.rect.x * this.ctx.width - this.rect.w * this.ctx.width * 0.5;
 		this.points[0].y = this.ctx.mouse.y - this.rect.y * this.ctx.height - this.rect.h * this.ctx.height * 0.5;
-		// }
+	}
+
+	updateDry(start, end) {
+		for (let i = start; i < end; i++) {
+			const p = this.points[i];
+			const pp = (i === 0) ? p : this.points[i - 1];
+
+			const dx = p.x - pp.x;
+			const dy = p.y - pp.y;
+			const dd = dx * dx + dy * dy;
+
+			if (dd > this.distanceSq) {
+				const a = atan2(dy, dx);
+
+				p.x = pp.x + this.distance * cos(a);
+				p.y = pp.y + this.distance * sin(a);
+			}
+		}
+	}
+
+	updateElastic() {
+		for (let i = this.points.length - 1; i > 0; i--) {
+			const p = this.points[i];
+			const pp = (i === 0) ? p : this.points[i - 1];
+
+			p.vx *= this.damp;
+			p.vy *= this.damp;
+
+			p.x += p.vx;
+			p.y += p.vy;
+
+			const ox = p.x;
+			const oy = p.y;
+
+			const dx = p.x - pp.x;
+			const dy = p.y - pp.y;
+			const dd = dx * dx + dy * dy;
+
+			if (dd > this.distanceSq) {
+				const a = atan2(dy, dx);
+
+				p.x = pp.x + this.distance * cos(a);
+				p.y = pp.y + this.distance * sin(a);
+
+				p.vx += (p.x - ox) * 0.1;
+				p.vy += (p.y - oy) * 0.1;
+			}
+		}
 	}
 
 	setState(state) {
 		this.state = state;
+
+		this.ctx.autoclear = true;
+		this.colorFill = this.color = this.colorA;
 
 		let time = 1;
 		let ease = Quart.easeInOut;
@@ -172,7 +209,8 @@ export default class ExampleRibbon {
 			case 2:
 			case 3:
 				for (let p of this.points) {
-					delay = (this.numPoints - p.index) * 0.02;
+					delay = (this.numPoints - p.index) * 0.05;
+					ease = Back.easeOut;
 					TweenMax.to(p, time, { x: 0, y: p.index * this.distance, ease, delay });
 				}
 				break;
@@ -181,6 +219,14 @@ export default class ExampleRibbon {
 					delay = p.index * 0.02;
 					TweenMax.to(p, time, { x: random(-25, 25), y: p.index * this.distance, ease, delay });
 				}
+				break;
+			case 10:
+				this.ctx.clear();
+				this.ctx.globalCompositeOperation = 'lighter';
+				this.color = this.colorB;
+			case 9:
+				this.ctx.clear();
+				this.ctx.autoclear = false;
 				break;
 		}
 	}
