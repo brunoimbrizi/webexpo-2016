@@ -619,11 +619,9 @@ var ExampleRibbon = function () {
 				for (var _iterator = this.points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 					var p = _step.value;
 
-					var radius = outline ? 5 : p.radius;
-
 					// fill
 					this.ctx.beginPath();
-					if (rect) this.ctx.rect(p.x - p.radius, p.y - p.radius, p.radius * 2, p.radius * 2);else this.ctx.arc(p.x, p.y, radius, 0, TWO_PI);
+					if (rect) this.ctx.rect(p.x - p.radius, p.y - p.radius, p.radius * 2, p.radius * 2);else this.ctx.arc(p.x, p.y, p.radius, 0, TWO_PI);
 					this.ctx.closePath();
 					this.ctx.fill();
 
@@ -631,13 +629,7 @@ var ExampleRibbon = function () {
 					if (!outline) continue;
 					this.ctx.strokeStyle = this.colorA;
 					this.ctx.beginPath();
-					this.ctx.arc(p.x, p.y, p.radius, 0, TWO_PI);
-					this.ctx.closePath();
-					this.ctx.stroke();
-
-					this.ctx.strokeStyle = this.colorC;
-					this.ctx.beginPath();
-					this.ctx.arc(p.x, p.y, p.radius * 1.5, 0, TWO_PI);
+					this.ctx.arc(p.x, p.y, p.radius * p.radius, 0, TWO_PI);
 					this.ctx.closePath();
 					this.ctx.stroke();
 				}
@@ -793,6 +785,8 @@ var ExampleRibbon = function () {
 					}
 				}
 			}
+
+			this.ctx.globalCompositeOperation = 'source-over';
 
 			if (!this.audio.paused) this.audio.pause();
 

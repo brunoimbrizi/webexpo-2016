@@ -103,12 +103,10 @@ export default class ExampleRibbon {
 
 	drawPoints(rect, outline) {
 		for (let p of this.points) {
-			const radius = (outline) ? 5 : p.radius;
-
 			// fill
 			this.ctx.beginPath();
 			if (rect) this.ctx.rect(p.x - p.radius, p.y - p.radius, p.radius * 2, p.radius * 2);
-			else this.ctx.arc(p.x, p.y, radius, 0, TWO_PI);
+			else this.ctx.arc(p.x, p.y, p.radius, 0, TWO_PI);
 			this.ctx.closePath();
 			this.ctx.fill();
 
@@ -116,13 +114,7 @@ export default class ExampleRibbon {
 			if (!outline) continue;
 			this.ctx.strokeStyle = this.colorA;
 			this.ctx.beginPath();
-			this.ctx.arc(p.x, p.y, p.radius, 0, TWO_PI);
-			this.ctx.closePath();
-			this.ctx.stroke();
-
-			this.ctx.strokeStyle = this.colorC;
-			this.ctx.beginPath();
-			this.ctx.arc(p.x, p.y, p.radius * 1.5, 0, TWO_PI);
+			this.ctx.arc(p.x, p.y, p.radius * p.radius, 0, TWO_PI);
 			this.ctx.closePath();
 			this.ctx.stroke();
 		}
@@ -235,6 +227,7 @@ export default class ExampleRibbon {
 		this.ctx.autoclear = true;
 		this.colorFill = this.color = this.colorA;
 		for (let p of this.points) { p.radius = 5; }
+		this.ctx.globalCompositeOperation = 'source-over';
 
 		if (!this.audio.paused) this.audio.pause();
 
