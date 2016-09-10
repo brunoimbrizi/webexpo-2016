@@ -22,13 +22,13 @@
 					<p><a href="http://brunoimbrizi.com">Bruno Imbrizi</a> @ WebExpo 2016</p>
 				</section>
 
+				<!--
 				<section data-background="#000000">
 					<h2>Invitation</h2>
 					<p><q>For Czechs is typical that we always try do things our way (...) we are a nation of handymen and inventors.</q></p>
 					<p><q>Czechs don’t like people who want to look clever, but love people who achieved something, because they were able to look at things differently.</q></p>
 				</section>
 
-				<!--
 				<section data-background="#000000">
 					<h2>&lt;canvas&gt;</h2>
 				</section>
@@ -128,14 +128,13 @@ for (let i = 1; i <= points.length; i++) {
 ctx.stroke();
 					</code></pre>
 				</section>
-				-->
 
 				<section data-example="4">
 					<h3>Move points</h3>
 					<pre><code class="hljs javascript" data-trim>
 for (let i = 0; i < points.length; i++) {
 	const p = points[i];
-	p.x = Math.random() * 50 - 25;
+	p.x = Math.random() * 100 - 50;
 }
 					</code></pre>
 				</section>
@@ -150,7 +149,7 @@ p.y = mouse.y;
 				</section>
 
 				<section data-example="6">
-					<h3>Keep a constant distance</h3>
+					<h3>Constant distance</h3>
 					<pre><code class="hljs javascript" data-trim>
 const distance = 50;
 
@@ -225,13 +224,16 @@ if (dd > distance) {
 
 				<section data-example="9">
 					<h3>Draw curves</h3>
-					<pre><code class="hljs javascript" data-trim>
+					<pre style="width: 60%"><code class="hljs javascript" data-trim >
 ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, p.x, p.y);
 					</code></pre>
 				</section>
 
 				<section data-example="10">
 					<h3>Stop clearing the canvas</h3>
+					<pre><code class="hljs javascript" data-trim>
+// ctx.clearRect(0, 0, canvas.width, canvas.height);
+					</code></pre>
 				</section>
 
 				<section data-example="11">
@@ -240,6 +242,11 @@ ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, p.x, p.y);
 ctx.globalCompositeOperation = 'lighter';
 ctx.strokeStyle = 'rgba(255, 170, 0, 0.1)';
 					</code></pre>
+				</section>
+				-->
+
+				<section data-example="12">
+					<h3>Canvas + Web Audio</h3>
 				</section>
 
 				<section>

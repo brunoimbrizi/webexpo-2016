@@ -1,17 +1,18 @@
 export default class ExampleRibbon {
 
-	constructor(ctx) {
+	constructor(ctx, audio) {
 		this.ctx = ctx;
+		this.audio = audio;
 
 		this.rect = { x: 0.5, y: 0, w: 0.5, h: 1 };
 		this.colorA = '#ffaa00';
 		this.colorB = 'rgba(255, 170, 0, 0.1)';
+		this.colorC = 'rgba(255, 190, 0, 0.4)';
 		
 		this.numPoints = 30;
 		this.distance = 50;
 		this.distanceSq = this.distance * this.distance;
 		this.damp = 0.9;
-		this.radius = 5;
 
 		this.initPoints();
 	}
@@ -29,6 +30,8 @@ export default class ExampleRibbon {
 				this.followMouse(true);
 				this.updateDry(1, this.points.length);
 				break;
+			case 12:
+				this.updateAudio();
 			case 8:
 			case 9:
 			case 10:
@@ -71,6 +74,10 @@ export default class ExampleRibbon {
 				this.drawPoints();
 				this.drawCurves();
 				break;
+			case 12:
+				this.drawPoints(false, true);
+				this.drawCurves();
+				break;
 			default:
 				break;
 		}
@@ -94,13 +101,30 @@ export default class ExampleRibbon {
 		if (center) this.ctx.translate(this.rect.w * this.ctx.width * 0.5, this.rect.h * this.ctx.height * 0.5);
 	}
 
-	drawPoints(rect) {
+	drawPoints(rect, outline) {
 		for (let p of this.points) {
+			const radius = (outline) ? 5 : p.radius;
+
+			// fill
 			this.ctx.beginPath();
 			if (rect) this.ctx.rect(p.x - p.radius, p.y - p.radius, p.radius * 2, p.radius * 2);
-			else this.ctx.arc(p.x, p.y, this.radius, 0, TWO_PI);
+			else this.ctx.arc(p.x, p.y, radius, 0, TWO_PI);
 			this.ctx.closePath();
 			this.ctx.fill();
+
+			// stroke
+			if (!outline) continue;
+			this.ctx.strokeStyle = this.colorA;
+			this.ctx.beginPath();
+			this.ctx.arc(p.x, p.y, p.radius, 0, TWO_PI);
+			this.ctx.closePath();
+			this.ctx.stroke();
+
+			this.ctx.strokeStyle = this.colorC;
+			this.ctx.beginPath();
+			this.ctx.arc(p.x, p.y, p.radius * 1.5, 0, TWO_PI);
+			this.ctx.closePath();
+			this.ctx.stroke();
 		}
 	}
 
@@ -124,11 +148,11 @@ export default class ExampleRibbon {
 		for (let i = 0; i < this.points.length; i++) {
 			const p = this.points[i];
 			const pp = (i === 0) ? p : this.points[i - 1];
+			const np = (i === this.points.length - 1) ? p : this.points[i + 1];
 			const offset = 10;
 
 			const cp1 = { x: pp.x + cos(pp.angle + HALF_PI) * offset, y: pp.y + sin(pp.angle + HALF_PI) * offset };
 			const cp2 = { x: p.x - cos(p.angle + HALF_PI) * offset, y: p.y - sin(p.angle + HALF_PI) * offset };
-
 			this.ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, p.x, p.y);
 		}
 
@@ -141,6 +165,7 @@ export default class ExampleRibbon {
 		if (!follow) return;
 
 		if (useRect && this.ctx.mouse.x < this.rect.x * this.ctx.width) return;
+		if (!this.ctx.mouse.x && !this.ctx.mouse.y) return;
 
 		this.points[0].x = this.ctx.mouse.x - this.rect.x * this.ctx.width - this.rect.w * this.ctx.width * 0.5;
 		this.points[0].y = this.ctx.mouse.y - this.rect.y * this.ctx.height - this.rect.h * this.ctx.height * 0.5;
@@ -194,12 +219,24 @@ export default class ExampleRibbon {
 		}
 	}
 
+	updateAudio() {
+		for (let i = 0; i < this.points.length; i++) {
+			const p = this.points[i];
+			p.radius = this.audio.values[i + 2] * 15;
+
+			if (!(i % 4)) p.radius = this.audio.values[3] * this.audio.values[3] * 18;
+			if (!(i % 5)) p.radius = this.audio.values[10] * 15;
+		}
+	}
+
 	setState(state) {
 		this.state = state;
 
 		this.ctx.autoclear = true;
 		this.colorFill = this.color = this.colorA;
-		this.radius = 5;
+		for (let p of this.points) { p.radius = 5; }
+
+		if (!this.audio.paused) this.audio.pause();
 
 		let time = 1;
 		let ease = Quart.easeInOut;
@@ -223,17 +260,20 @@ export default class ExampleRibbon {
 			case 4:
 				for (let p of this.points) {
 					delay = p.index * 0.02;
-					TweenMax.to(p, time, { x: random(-25, 25), y: p.index * this.distance, ease, delay });
+					TweenMax.to(p, time, { x: random(-50, 50), y: p.index * this.distance, ease, delay });
 				}
 				break;
 			case 11:
 				this.ctx.clear();
 				this.ctx.globalCompositeOperation = 'lighter';
 				this.color = this.colorB;
-				this.radius = 2;
+				for (let p of this.points) { p.radius = 2; }
 			case 10:
 				this.ctx.clear();
 				this.ctx.autoclear = false;
+				break;
+			case 12:
+				this.audio.play(true);
 				break;
 		}
 	}

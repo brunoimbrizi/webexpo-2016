@@ -3,7 +3,9 @@ import ExampleRibbon from './examples/ExampleRibbon';
 
 export default class AppView {
 
-	constructor() {
+	constructor(app) {
+		this.audio = app.audio;
+		
 		this.initReveal();
 		this.initSketch();
 	}
@@ -23,6 +25,7 @@ export default class AppView {
 		};
 
 		this.sketch.update = () => {
+			this.audio.update();
 			this.example.update();
 		};
 
@@ -55,7 +58,7 @@ export default class AppView {
 	// }
 
 	initExample() {
-		this.example = new ExampleRibbon(this.sketch);
+		this.example = new ExampleRibbon(this.sketch, this.audio);
 	}
 
 	initReveal() {

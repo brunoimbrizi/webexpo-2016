@@ -2,10 +2,14 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _AppAudio = require('./audio/AppAudio');
+
+var _AppAudio2 = _interopRequireDefault(_AppAudio);
 
 var _AppView = require('./view/AppView');
 
@@ -16,78 +20,330 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var App = function () {
-  function App(el) {
-    _classCallCheck(this, App);
+	function App(el) {
+		_classCallCheck(this, App);
 
-    this.el = el;
-    this.listeners = {};
+		this.el = el;
+		this.listeners = {};
 
-    this.initView();
-  }
+		this.initAudio();
+		this.initView();
+	}
 
-  _createClass(App, [{
-    key: 'initView',
-    value: function initView() {
-      this.view = new _AppView2.default();
-    }
-  }, {
-    key: 'on',
-    value: function on(type, cb) {
-      this.listeners[type] = this.listeners[type] || [];
-      if (this.listeners[type].indexOf(cb) === -1) {
-        this.listeners[type].push(cb);
-      }
-    }
-  }, {
-    key: 'off',
-    value: function off(type, cb) {
-      if (this.listeners[type]) {
-        if (cb) {
-          var index = this.listeners[type].indexOf(cb);
-          if (index !== -1) {
-            this.listeners[type].splice(index, 1);
-          }
-        } else this.listeners[type] = [];
-      }
-    }
-  }, {
-    key: 'trigger',
-    value: function trigger(type, args) {
-      if (this.listeners[type]) {
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+	_createClass(App, [{
+		key: 'initAudio',
+		value: function initAudio() {
+			this.audio = new _AppAudio2.default(this);
+		}
+	}, {
+		key: 'initView',
+		value: function initView() {
+			this.view = new _AppView2.default(this);
+		}
+	}, {
+		key: 'on',
+		value: function on(type, cb) {
+			this.listeners[type] = this.listeners[type] || [];
+			if (this.listeners[type].indexOf(cb) === -1) {
+				this.listeners[type].push(cb);
+			}
+		}
+	}, {
+		key: 'off',
+		value: function off(type, cb) {
+			if (this.listeners[type]) {
+				if (cb) {
+					var index = this.listeners[type].indexOf(cb);
+					if (index !== -1) {
+						this.listeners[type].splice(index, 1);
+					}
+				} else this.listeners[type] = [];
+			}
+		}
+	}, {
+		key: 'trigger',
+		value: function trigger(type, args) {
+			if (this.listeners[type]) {
+				var _iteratorNormalCompletion = true;
+				var _didIteratorError = false;
+				var _iteratorError = undefined;
 
-        try {
-          for (var _iterator = this.listeners[type][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var cb = _step.value;
+				try {
+					for (var _iterator = this.listeners[type][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+						var cb = _step.value;
 
-            cb(args);
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
-      }
-    }
-  }]);
+						cb(args);
+					}
+				} catch (err) {
+					_didIteratorError = true;
+					_iteratorError = err;
+				} finally {
+					try {
+						if (!_iteratorNormalCompletion && _iterator.return) {
+							_iterator.return();
+						}
+					} finally {
+						if (_didIteratorError) {
+							throw _iteratorError;
+						}
+					}
+				}
+			}
+		}
+	}]);
 
-  return App;
+	return App;
 }();
 
 exports.default = App;
 
-},{"./view/AppView":3}],2:[function(require,module,exports){
+},{"./audio/AppAudio":2,"./view/AppView":4}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AppAudio = function () {
+	_createClass(AppAudio, [{
+		key: 'FFT_SIZE',
+		get: function get() {
+			return 512;
+		}
+	}, {
+		key: 'BINS',
+		get: function get() {
+			return 128;
+		}
+	}], [{
+		key: 'AUDIO_LOAD',
+		get: function get() {
+			return 'audio-load';
+		}
+	}, {
+		key: 'AUDIO_DECODE',
+		get: function get() {
+			return 'audio-decode';
+		}
+	}, {
+		key: 'AUDIO_PLAY',
+		get: function get() {
+			return 'audio-play';
+		}
+	}, {
+		key: 'AUDIO_PAUSE',
+		get: function get() {
+			return 'audio-pause';
+		}
+	}, {
+		key: 'AUDIO_END',
+		get: function get() {
+			return 'audio-end';
+		}
+	}, {
+		key: 'AUDIO_RESTART',
+		get: function get() {
+			return 'audio-restart';
+		}
+	}]);
+
+	function AppAudio(app) {
+		_classCallCheck(this, AppAudio);
+
+		this.app = app;
+		this.paused = true;
+		this.pausedAt = 0;
+
+		this.initContext();
+		this.initGain();
+		this.initAnalyser();
+
+		this.load('sounds/201151_SOUNDDOGS__tu.mp3');
+	}
+
+	_createClass(AppAudio, [{
+		key: 'initContext',
+		value: function initContext() {
+			if (window.AudioContext === void 0) window.AudioContext = window.webkitAudioContext;
+			this.ctx = new AudioContext();
+		}
+	}, {
+		key: 'initGain',
+		value: function initGain() {
+			this.gainNode = this.ctx.createGain();
+			this.gainNode.gain.value = 1.0;
+			this.gainNode.connect(this.ctx.destination);
+		}
+	}, {
+		key: 'initAnalyser',
+		value: function initAnalyser() {
+			this.values = [];
+			this.selectedIndices = [20, 30, 40, 50, 60, 70, 75, 80, 85, 90];
+			this.selectedValues = [];
+			this.oldValues = [];
+
+			this.threshold = 1.0;
+			this.kickThreshold = 0.1;
+
+			this.analyserNode = this.ctx.createAnalyser();
+			this.analyserNode.smoothingTimeConstant = 0.9;
+			this.analyserNode.fftSize = this.FFT_SIZE;
+			this.analyserNode.connect(this.gainNode);
+			// this.analyserNode.connect(this.ctx.destination); // comment out to start mute
+		}
+
+		// ---------------------------------------------------------------------------------------------
+		// PUBLIC
+		// ---------------------------------------------------------------------------------------------
+
+	}, {
+		key: 'load',
+		value: function load(url) {
+			var request = new XMLHttpRequest();
+			request.open('GET', url, true);
+			request.responseType = 'arraybuffer';
+			request.onprogress = this.onRequestProgress.bind(this);
+			request.onload = this.onRequestLoad.bind(this);
+			request.send();
+		}
+	}, {
+		key: 'play',
+		value: function play(loop) {
+			// if (this.ended) window.dispatchEvent(new Event(this.EVENT_AUDIO_RESTARTED));
+
+			this.sourceNode = this.ctx.createBufferSource();
+			this.sourceNode.onended = this.onSourceEnded.bind(this);
+			this.sourceNode.connect(this.analyserNode);
+			this.sourceNode.buffer = this.buffer;
+			this.ended = false;
+			this.paused = false;
+			this.loop = loop;
+
+			this.startedAt = Date.now() - this.pausedAt;
+			this.sourceNode.start(0, this.pausedAt / 1000);
+
+			this.app.trigger(AppAudio.AUDIO_PLAY, { currentTime: this.pausedAt });
+		}
+	}, {
+		key: 'pause',
+		value: function pause() {
+			this.sourceNode.stop(0);
+			this.pausedAt = Date.now() - this.startedAt;
+			this.paused = true;
+
+			this.app.trigger(AppAudio.AUDIO_PAUSE, { currentTime: this.pausedAt });
+		}
+	}, {
+		key: 'seek',
+		value: function seek(time) {
+			if (time == undefined) return;
+			if (time > this.buffer.duration) return;
+
+			this.ended = false;
+
+			if (!this.paused) {
+				this.sourceNode.onended = null;
+				this.sourceNode.stop(0);
+			}
+			this.pausedAt = time * 1000;
+			if (!this.paused) this.play();
+		}
+	}, {
+		key: 'update',
+		value: function update() {
+			var freqData = new Uint8Array(this.analyserNode.frequencyBinCount);
+			this.analyserNode.getByteFrequencyData(freqData);
+			var length = freqData.length;
+
+			this.oldValues = this.values.concat();
+
+			var bin = Math.ceil(length / this.BINS);
+			for (var i = 0; i < this.BINS; i++) {
+				var sum = 0;
+				for (var j = 0; j < bin; j++) {
+					sum += freqData[i * bin + j];
+				}
+
+				// Calculate the average frequency of the samples in the bin
+				var average = sum / bin;
+
+				// Divide by number of bins to normalize
+				// this.values[i] = (average / this.BINS) / this.playbackRate;
+				this.values[i] = average / this.BINS;
+			}
+
+			for (var _i = 0; _i < this.selectedIndices.length; _i++) {
+				var index = this.selectedIndices[_i];
+				this.selectedValues[_i] = this.values[index];
+			}
+
+			// set current time
+			if (this.loaded && !this.ended) {
+				this.currentTime = this.paused ? this.pausedAt : Date.now() - this.startedAt;
+				// this.currentTime *= this.playbackRate;
+			}
+		}
+
+		// ---------------------------------------------------------------------------------------------
+		// EVENT HANDLERS
+		// ---------------------------------------------------------------------------------------------
+
+	}, {
+		key: 'onRequestProgress',
+		value: function onRequestProgress(e) {
+			// console.log('AppAudio.onRequestProgress', e)
+		}
+	}, {
+		key: 'onRequestLoad',
+		value: function onRequestLoad(e) {
+			// console.log('AppAudio.onRequestLoad', e);
+
+			this.ctx.decodeAudioData(e.target.response, this.onBufferLoaded.bind(this), this.onBufferError.bind(this));
+
+			this.app.trigger(AppAudio.AUDIO_LOAD);
+		}
+	}, {
+		key: 'onBufferLoaded',
+		value: function onBufferLoaded(buffer) {
+			this.buffer = buffer;
+
+			this.loaded = true;
+			this.duration = this.buffer.duration * 1000;
+			// this.play();
+
+			this.app.trigger(AppAudio.AUDIO_DECODE);
+		}
+	}, {
+		key: 'onBufferError',
+		value: function onBufferError(e) {
+			// console.log('AppAudio.onBufferError', e)
+		}
+	}, {
+		key: 'onSourceEnded',
+		value: function onSourceEnded(e) {
+			// console.log('AppAudio.onSourceEnded', this.paused)
+			if (this.paused) return;
+			this.currentTime = this.duration;
+			this.ended = true;
+			this.paused = true;
+			this.pausedAt = 0;
+
+			if (this.loop) this.play(this.loop);
+
+			// window.dispatchEvent(new Event(this.EVENT_AUDIO_ENDED));
+		}
+	}]);
+
+	return AppAudio;
+}();
+
+exports.default = AppAudio;
+
+},{}],3:[function(require,module,exports){
 'use strict';
 
 var _App = require('./App');
@@ -109,7 +365,7 @@ ready(function () {
   window.app = app;
 });
 
-},{"./App":1}],3:[function(require,module,exports){
+},{"./App":1}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -128,8 +384,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AppView = function () {
-	function AppView() {
+	function AppView(app) {
 		_classCallCheck(this, AppView);
+
+		this.audio = app.audio;
 
 		this.initReveal();
 		this.initSketch();
@@ -154,6 +412,7 @@ var AppView = function () {
 			};
 
 			this.sketch.update = function () {
+				_this.audio.update();
 				_this.example.update();
 			};
 
@@ -186,7 +445,7 @@ var AppView = function () {
 	}, {
 		key: 'initExample',
 		value: function initExample() {
-			this.example = new _ExampleRibbon2.default(this.sketch);
+			this.example = new _ExampleRibbon2.default(this.sketch, this.audio);
 		}
 	}, {
 		key: 'initReveal',
@@ -230,7 +489,7 @@ var AppView = function () {
 
 exports.default = AppView;
 
-},{"./examples/ExampleRibbon":4}],4:[function(require,module,exports){
+},{"./examples/ExampleRibbon":5}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -242,20 +501,21 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ExampleRibbon = function () {
-	function ExampleRibbon(ctx) {
+	function ExampleRibbon(ctx, audio) {
 		_classCallCheck(this, ExampleRibbon);
 
 		this.ctx = ctx;
+		this.audio = audio;
 
 		this.rect = { x: 0.5, y: 0, w: 0.5, h: 1 };
 		this.colorA = '#ffaa00';
 		this.colorB = 'rgba(255, 170, 0, 0.1)';
+		this.colorC = 'rgba(255, 190, 0, 0.4)';
 
 		this.numPoints = 30;
 		this.distance = 50;
 		this.distanceSq = this.distance * this.distance;
 		this.damp = 0.9;
-		this.radius = 5;
 
 		this.initPoints();
 	}
@@ -275,6 +535,8 @@ var ExampleRibbon = function () {
 					this.followMouse(true);
 					this.updateDry(1, this.points.length);
 					break;
+				case 12:
+					this.updateAudio();
 				case 8:
 				case 9:
 				case 10:
@@ -318,6 +580,10 @@ var ExampleRibbon = function () {
 					this.drawPoints();
 					this.drawCurves();
 					break;
+				case 12:
+					this.drawPoints(false, true);
+					this.drawCurves();
+					break;
 				default:
 					break;
 			}
@@ -344,7 +610,7 @@ var ExampleRibbon = function () {
 		}
 	}, {
 		key: 'drawPoints',
-		value: function drawPoints(rect) {
+		value: function drawPoints(rect, outline) {
 			var _iteratorNormalCompletion = true;
 			var _didIteratorError = false;
 			var _iteratorError = undefined;
@@ -353,10 +619,27 @@ var ExampleRibbon = function () {
 				for (var _iterator = this.points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 					var p = _step.value;
 
+					var radius = outline ? 5 : p.radius;
+
+					// fill
 					this.ctx.beginPath();
-					if (rect) this.ctx.rect(p.x - p.radius, p.y - p.radius, p.radius * 2, p.radius * 2);else this.ctx.arc(p.x, p.y, this.radius, 0, TWO_PI);
+					if (rect) this.ctx.rect(p.x - p.radius, p.y - p.radius, p.radius * 2, p.radius * 2);else this.ctx.arc(p.x, p.y, radius, 0, TWO_PI);
 					this.ctx.closePath();
 					this.ctx.fill();
+
+					// stroke
+					if (!outline) continue;
+					this.ctx.strokeStyle = this.colorA;
+					this.ctx.beginPath();
+					this.ctx.arc(p.x, p.y, p.radius, 0, TWO_PI);
+					this.ctx.closePath();
+					this.ctx.stroke();
+
+					this.ctx.strokeStyle = this.colorC;
+					this.ctx.beginPath();
+					this.ctx.arc(p.x, p.y, p.radius * 1.5, 0, TWO_PI);
+					this.ctx.closePath();
+					this.ctx.stroke();
 				}
 			} catch (err) {
 				_didIteratorError = true;
@@ -396,11 +679,11 @@ var ExampleRibbon = function () {
 			for (var i = 0; i < this.points.length; i++) {
 				var p = this.points[i];
 				var pp = i === 0 ? p : this.points[i - 1];
+				var np = i === this.points.length - 1 ? p : this.points[i + 1];
 				var offset = 10;
 
 				var cp1 = { x: pp.x + cos(pp.angle + HALF_PI) * offset, y: pp.y + sin(pp.angle + HALF_PI) * offset };
 				var cp2 = { x: p.x - cos(p.angle + HALF_PI) * offset, y: p.y - sin(p.angle + HALF_PI) * offset };
-
 				this.ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, p.x, p.y);
 			}
 
@@ -414,6 +697,7 @@ var ExampleRibbon = function () {
 			if (!follow) return;
 
 			if (useRect && this.ctx.mouse.x < this.rect.x * this.ctx.width) return;
+			if (!this.ctx.mouse.x && !this.ctx.mouse.y) return;
 
 			this.points[0].x = this.ctx.mouse.x - this.rect.x * this.ctx.width - this.rect.w * this.ctx.width * 0.5;
 			this.points[0].y = this.ctx.mouse.y - this.rect.y * this.ctx.height - this.rect.h * this.ctx.height * 0.5;
@@ -469,13 +753,48 @@ var ExampleRibbon = function () {
 			}
 		}
 	}, {
+		key: 'updateAudio',
+		value: function updateAudio() {
+			for (var i = 0; i < this.points.length; i++) {
+				var p = this.points[i];
+				p.radius = this.audio.values[i + 2] * 15;
+
+				if (!(i % 4)) p.radius = this.audio.values[3] * this.audio.values[3] * 18;
+				if (!(i % 5)) p.radius = this.audio.values[10] * 15;
+			}
+		}
+	}, {
 		key: 'setState',
 		value: function setState(state) {
 			this.state = state;
 
 			this.ctx.autoclear = true;
 			this.colorFill = this.color = this.colorA;
-			this.radius = 5;
+			var _iteratorNormalCompletion2 = true;
+			var _didIteratorError2 = false;
+			var _iteratorError2 = undefined;
+
+			try {
+				for (var _iterator2 = this.points[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+					var _p4 = _step2.value;
+					_p4.radius = 5;
+				}
+			} catch (err) {
+				_didIteratorError2 = true;
+				_iteratorError2 = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion2 && _iterator2.return) {
+						_iterator2.return();
+					}
+				} finally {
+					if (_didIteratorError2) {
+						throw _iteratorError2;
+					}
+				}
+			}
+
+			if (!this.audio.paused) this.audio.pause();
 
 			var time = 1;
 			var ease = Quart.easeInOut;
@@ -483,46 +802,15 @@ var ExampleRibbon = function () {
 
 			switch (state) {
 				case 0:
-					var _iteratorNormalCompletion2 = true;
-					var _didIteratorError2 = false;
-					var _iteratorError2 = undefined;
-
-					try {
-						for (var _iterator2 = this.points[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-							var p = _step2.value;
-
-							TweenMax.to(p, time, { x: 0, y: 0, ease: ease });
-						}
-					} catch (err) {
-						_didIteratorError2 = true;
-						_iteratorError2 = err;
-					} finally {
-						try {
-							if (!_iteratorNormalCompletion2 && _iterator2.return) {
-								_iterator2.return();
-							}
-						} finally {
-							if (_didIteratorError2) {
-								throw _iteratorError2;
-							}
-						}
-					}
-
-					break;
-				case 1:
-				case 2:
-				case 3:
 					var _iteratorNormalCompletion3 = true;
 					var _didIteratorError3 = false;
 					var _iteratorError3 = undefined;
 
 					try {
 						for (var _iterator3 = this.points[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-							var _p = _step3.value;
+							var p = _step3.value;
 
-							delay = (this.numPoints - _p.index) * 0.05;
-							ease = Back.easeOut;
-							TweenMax.to(_p, time, { x: 0, y: _p.index * this.distance, ease: ease, delay: delay });
+							TweenMax.to(p, time, { x: 0, y: 0, ease: ease });
 						}
 					} catch (err) {
 						_didIteratorError3 = true;
@@ -540,17 +828,20 @@ var ExampleRibbon = function () {
 					}
 
 					break;
-				case 4:
+				case 1:
+				case 2:
+				case 3:
 					var _iteratorNormalCompletion4 = true;
 					var _didIteratorError4 = false;
 					var _iteratorError4 = undefined;
 
 					try {
 						for (var _iterator4 = this.points[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-							var _p2 = _step4.value;
+							var _p = _step4.value;
 
-							delay = _p2.index * 0.02;
-							TweenMax.to(_p2, time, { x: random(-25, 25), y: _p2.index * this.distance, ease: ease, delay: delay });
+							delay = (this.numPoints - _p.index) * 0.05;
+							ease = Back.easeOut;
+							TweenMax.to(_p, time, { x: 0, y: _p.index * this.distance, ease: ease, delay: delay });
 						}
 					} catch (err) {
 						_didIteratorError4 = true;
@@ -568,14 +859,68 @@ var ExampleRibbon = function () {
 					}
 
 					break;
+				case 4:
+					var _iteratorNormalCompletion5 = true;
+					var _didIteratorError5 = false;
+					var _iteratorError5 = undefined;
+
+					try {
+						for (var _iterator5 = this.points[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+							var _p2 = _step5.value;
+
+							delay = _p2.index * 0.02;
+							TweenMax.to(_p2, time, { x: random(-50, 50), y: _p2.index * this.distance, ease: ease, delay: delay });
+						}
+					} catch (err) {
+						_didIteratorError5 = true;
+						_iteratorError5 = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion5 && _iterator5.return) {
+								_iterator5.return();
+							}
+						} finally {
+							if (_didIteratorError5) {
+								throw _iteratorError5;
+							}
+						}
+					}
+
+					break;
 				case 11:
 					this.ctx.clear();
 					this.ctx.globalCompositeOperation = 'lighter';
 					this.color = this.colorB;
-					this.radius = 2;
+					var _iteratorNormalCompletion6 = true;
+					var _didIteratorError6 = false;
+					var _iteratorError6 = undefined;
+
+					try {
+						for (var _iterator6 = this.points[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+							var _p3 = _step6.value;
+							_p3.radius = 2;
+						}
+					} catch (err) {
+						_didIteratorError6 = true;
+						_iteratorError6 = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion6 && _iterator6.return) {
+								_iterator6.return();
+							}
+						} finally {
+							if (_didIteratorError6) {
+								throw _iteratorError6;
+							}
+						}
+					}
+
 				case 10:
 					this.ctx.clear();
 					this.ctx.autoclear = false;
+					break;
+				case 12:
+					this.audio.play(true);
 					break;
 			}
 		}
@@ -586,4 +931,4 @@ var ExampleRibbon = function () {
 
 exports.default = ExampleRibbon;
 
-},{}]},{},[2]);
+},{}]},{},[3]);
