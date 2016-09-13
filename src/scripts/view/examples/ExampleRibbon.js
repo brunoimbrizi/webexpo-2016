@@ -112,9 +112,10 @@ export default class ExampleRibbon {
 
 			// stroke
 			if (!outline) continue;
+			const radius = p.radius * sqrt(p.vx);
 			this.ctx.strokeStyle = this.colorA;
 			this.ctx.beginPath();
-			this.ctx.arc(p.x, p.y, p.radius * p.radius, 0, TWO_PI);
+			this.ctx.arc(p.x, p.y, radius, 0, TWO_PI);
 			this.ctx.closePath();
 			this.ctx.stroke();
 		}
