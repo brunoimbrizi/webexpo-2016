@@ -22,14 +22,19 @@
 					<p><a href="http://brunoimbrizi.com">Bruno Imbrizi</a> @ WebExpo 2016</p>
 				</section>
 
-				<section data-background="#000000">
-					<h2>Invitation</h2>
-					<p><q>For Czechs is typical that we always try do things our way (...) we are a nation of handymen and inventors.</q></p>
-					<p><q>Czechs don’t like people who want to look clever, but love people who achieved something, because they were able to look at things differently.</q></p>
+				<section>
+					<section data-background="#000">
+						<h2>Invitation</h2>
+						<p><q>For Czechs is typical that we always try do things our way (...) we are a nation of handymen and inventors.</q></p>
+					</section>
+					<section data-background="#000">
+						<h2>Invitation</h2>
+						<p><q>Czechs don’t like people who want to look clever, but love people who achieved something, because they were able to look at things differently.</q></p>
+					</section>
 				</section>
 
-				<section data-background="#000000">
-					<h2>&lt;canvas&gt;</h2>
+				<section data-background="#000">
+					<h2 style="text-transform: lowercase">&lt; canvas &gt;</h2>
 				</section>
 
 				<section data-background="#000">
@@ -45,14 +50,14 @@
 				</section>
 
 				<section>
-					<section data-background="img/unit9-04.jpg" data-transition="none">
+					<section data-background="img/unit9-04.jpg">
 						<h2>UNIT9</h2>
 						<p>Films / Digital / Games / VR / Innovation</p>
 					</section>
-					<section data-background="img/unit9-06.png" data-transition="none">
+					<section data-background="img/unit9-06.png">
 						<h2>Web</h2>
 					</section>
-					<section data-background="img/unit9-08.jpg" data-transition="none">
+					<section data-background="img/unit9-08.jpg">
 						<h2>Installations</h2>
 					</section>
 				</section>
@@ -66,19 +71,12 @@
 					<p>Jan 2008 / <a href="https://www.w3.org/standards/history/2dcontext">W3C First Public Draft</a></p>
 				</section>
 
-				<section data-background="img/history-03.jpg">
+				<section data-background="img/9elements-01.gif">
 					<p>Aug 2009 / <a href="http://9elements.com/io/projects/html5/canvas/">9elements canvas experiment</a></p>
 				</section>
 
 				<section data-background="img/flash-02.jpg">
 					<h2>Flash</h2>
-				</section>
-
-				<section>
-					<h2>Similarities</h2>
-					<p>Big bitmap</p>
-					<p>Graphics API</p>
-					<p>Refresh event / method</p>
 				</section>
 
 				<section data-background="img/processing-01.jpg">
@@ -89,34 +87,45 @@
 					<h2>openFrameworks</h2>
 				</section>
 
+				<section>
+					<h2>Similarities</h2>
+					<p>Big bitmap</p>
+					<p>Graphics API</p>
+					<p>Refresh event / method</p>
+				</section>
+
 				<section data-background="#000">
 					<h3>Flash / ActionScript</h3>
 					<pre><code class="hljs actionscript" data-trim>
-graphics.drawRect(100, 50, 200, 90);
-
 addEventListener(Event.ENTER_FRAME, onEnterFrame);
-private function onEnterFrame(e:Event) { }
+
+private function onEnterFrame(e:Event) { 
+	graphics.drawRect(100, 50, 200, 90);
+}
 					</code></pre>
 				</section>
 
 				<section data-background="#000">
 					<h3>Processing / Java</h3>
 					<pre><code class="hljs actionscript" data-trim>
-rect(30, 20, 55, 55);
-
 void setup() { }
-void draw() { }
+
+void draw() {
+	rect(30, 20, 55, 55);
+}
 					</code></pre>
 				</section>
 
 				<section data-background="#000">
 					<h3>openFrameworks / C++</h3>
 					<pre><code class="hljs cpp" data-trim>
-drawRectangle(30, 20, 0, 200, 160);
-
 void setup() { }
+
 void update() { }
-void draw() { }
+
+void draw() { 
+	drawRectangle(30, 20, 0, 200, 160);
+}
 					</code></pre>
 				</section>
 
@@ -126,6 +135,16 @@ void draw() { }
 
 				<section data-background="img/history-05.gif">
 					<p>Aug 2012 / <a href="http://brunoimbrizi.com/experiments/#/01">my first canvas</a></p>
+				</section>
+
+				<section>
+					<h3>Create a canvas</h3>
+					<pre><code class="hljs javascript" data-trim>
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+
+requestAnimationFrame(draw);
+					</code></pre>
 				</section>
 
 				<section data-example="0">
@@ -250,7 +269,7 @@ for (let i = 1; i < points.length; i++) {
 				</section>
 
 				<section data-example="8">
-					<h3>Make it elastic</h3>
+					<h3>Make it elastic I</h3>
 					<pre><code class="hljs javascript" data-trim>
 for (let i = points.length - 1; i > 0; i--) {
 	// define pp, p, dx, dy, dd, angle as before
@@ -264,7 +283,7 @@ for (let i = points.length - 1; i > 0; i--) {
 				</section>
 
 				<section data-example="8">
-					<h3>Make it elastic</h3>
+					<h3>Make it elastic II</h3>
 					<pre><code class="hljs javascript" data-trim>
 const ox = p.x;
 const oy = p.y;	
@@ -287,7 +306,7 @@ ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, p.x, p.y);
 				</section>
 
 				<section data-example="10">
-					<h3>Stop clearing the canvas</h3>
+					<h3>Stop clearing</h3>
 					<pre><code class="hljs javascript" data-trim>
 // ctx.clearRect(0, 0, canvas.width, canvas.height);
 					</code></pre>
@@ -303,12 +322,6 @@ ctx.strokeStyle = 'rgba(255, 170, 0, 0.1)';
 
 				<section data-example="12">
 					<h3>Canvas + Web Audio</h3>
-				</section>
-
-				<section>
-					<!-- <iframe data-src="http://brunoimbrizi.com/experiments/02" width="100%" height="500" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:3px solid #666; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe> -->
-					<h2>Experiments</h2>
-					<p><a href="http://brunoimbrizi.com/experiments/">brunoimbrizi.com/experiments</a>
 				</section>
 
 				<section>

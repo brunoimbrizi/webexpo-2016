@@ -655,9 +655,10 @@ var ExampleRibbon = function () {
 			this.ctx.beginPath();
 			this.ctx.moveTo(this.points[0].x, this.points[0].y);
 
-			for (var i = 0; i <= this.points.length; i++) {
-				var pp = i === 0 ? this.points[0] : this.points[i - 1];
-				this.ctx.lineTo(pp.x, pp.y);
+			for (var i = 1; i < this.points.length; i++) {
+				var p = this.points[i];
+				var pp = this.points[i - 1];
+				this.ctx.lineTo(p.x, p.y);
 			}
 
 			this.ctx.strokeStyle = this.color;
@@ -805,7 +806,7 @@ var ExampleRibbon = function () {
 						for (var _iterator3 = this.points[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
 							var p = _step3.value;
 
-							TweenMax.to(p, time, { x: 0, y: 0, ease: ease });
+							TweenMax.to(p, time, { x: 0, y: 0, ease: ease, overwrite: 1 });
 						}
 					} catch (err) {
 						_didIteratorError3 = true;
@@ -824,8 +825,6 @@ var ExampleRibbon = function () {
 
 					break;
 				case 1:
-				case 2:
-				case 3:
 					var _iteratorNormalCompletion4 = true;
 					var _didIteratorError4 = false;
 					var _iteratorError4 = undefined;
@@ -854,17 +853,24 @@ var ExampleRibbon = function () {
 					}
 
 					break;
-				case 4:
+				case 2:
 					var _iteratorNormalCompletion5 = true;
 					var _didIteratorError5 = false;
 					var _iteratorError5 = undefined;
 
 					try {
-						for (var _iterator5 = this.points[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-							var _p2 = _step5.value;
+						var _loop = function _loop() {
+							var p = _step5.value;
 
-							delay = _p2.index * 0.02;
-							TweenMax.to(_p2, time, { x: random(-50, 50), y: _p2.index * this.distance, ease: ease, delay: delay });
+							delay = p.index * 0.05;
+							ease = Back.easeOut;
+							TweenMax.to(p, 0.1, { radius: 15, ease: ease, delay: delay, onComplete: function onComplete() {
+									TweenMax.to(p, time, { x: 0, radius: 5, ease: ease, overwrite: 0 });
+								} });
+						};
+
+						for (var _iterator5 = this.points[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+							_loop();
 						}
 					} catch (err) {
 						_didIteratorError5 = true;
@@ -882,18 +888,17 @@ var ExampleRibbon = function () {
 					}
 
 					break;
-				case 11:
-					this.ctx.clear();
-					this.ctx.globalCompositeOperation = 'lighter';
-					this.color = this.colorB;
+				case 4:
 					var _iteratorNormalCompletion6 = true;
 					var _didIteratorError6 = false;
 					var _iteratorError6 = undefined;
 
 					try {
 						for (var _iterator6 = this.points[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-							var _p3 = _step6.value;
-							_p3.radius = 2;
+							var _p2 = _step6.value;
+
+							delay = _p2.index * 0.02;
+							TweenMax.to(_p2, time, { x: random(-50, 50), y: _p2.index * this.distance, ease: ease, delay: delay });
 						}
 					} catch (err) {
 						_didIteratorError6 = true;
@@ -906,6 +911,35 @@ var ExampleRibbon = function () {
 						} finally {
 							if (_didIteratorError6) {
 								throw _iteratorError6;
+							}
+						}
+					}
+
+					break;
+				case 11:
+					this.ctx.clear();
+					this.ctx.globalCompositeOperation = 'lighter';
+					this.color = this.colorB;
+					var _iteratorNormalCompletion7 = true;
+					var _didIteratorError7 = false;
+					var _iteratorError7 = undefined;
+
+					try {
+						for (var _iterator7 = this.points[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+							var _p3 = _step7.value;
+							_p3.radius = 2;
+						}
+					} catch (err) {
+						_didIteratorError7 = true;
+						_iteratorError7 = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion7 && _iterator7.return) {
+								_iterator7.return();
+							}
+						} finally {
+							if (_didIteratorError7) {
+								throw _iteratorError7;
 							}
 						}
 					}

@@ -50,7 +50,7 @@ body {
 
 .reveal[data-background-transition=slide] > .backgrounds > .slide-background {
 /*.reveal > .backgrounds .slide-background[data-background-transition=slide] {*/
-  opacity: 0.4; }
+  opacity: 0.25; }
 
 .reveal .slides > section,
 .reveal .slides > section > section {

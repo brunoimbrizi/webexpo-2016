@@ -125,9 +125,10 @@ export default class ExampleRibbon {
 		this.ctx.beginPath();
 		this.ctx.moveTo(this.points[0].x, this.points[0].y);
 
-		for (let i = 0; i <= this.points.length; i++) {
-			const pp = (i === 0) ? this.points[0] : this.points[i - 1];
-			this.ctx.lineTo(pp.x, pp.y);
+		for (let i = 1; i < this.points.length; i++) {
+			const p = this.points[i];
+			const pp = this.points[i - 1];
+			this.ctx.lineTo(p.x, p.y);
 		}
 
 		this.ctx.strokeStyle = this.color;
@@ -239,16 +240,23 @@ export default class ExampleRibbon {
 		switch(state) {
 			case 0:
 				for (let p of this.points) {
-					TweenMax.to(p, time, { x: 0, y: 0, ease });
+					TweenMax.to(p, time, { x: 0, y: 0, ease, overwrite: 1 });
 				}
 				break;
 			case 1:
-			case 2:
-			case 3:
 				for (let p of this.points) {
 					delay = (this.numPoints - p.index) * 0.05;
 					ease = Back.easeOut;
 					TweenMax.to(p, time, { x: 0, y: p.index * this.distance, ease, delay });
+				}
+				break;
+			case 2:
+				for (let p of this.points) {
+					delay = p.index * 0.05;
+					ease = Back.easeOut;
+					TweenMax.to(p, 0.1, { radius: 15, ease, delay, onComplete: () => {
+						TweenMax.to(p, time, { x: 0, radius: 5, ease, overwrite: 0 });
+					} });
 				}
 				break;
 			case 4:
