@@ -52,6 +52,9 @@ body {
 /*.reveal > .backgrounds .slide-background[data-background-transition=slide] {*/
   opacity: 0.25; }
 
+.reveal > .backgrounds > .slide-background[data-background-transition=concave] {
+  opacity: 1.00; }
+
 .reveal .slides > section,
 .reveal .slides > section > section {
   line-height: 1.3;
