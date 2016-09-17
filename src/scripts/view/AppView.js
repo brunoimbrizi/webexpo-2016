@@ -8,6 +8,7 @@ export default class AppView {
 		
 		this.initReveal();
 		this.initSketch();
+		this.initArrows();
 	}
 
 	initSketch() {
@@ -88,6 +89,21 @@ export default class AppView {
 			const state = (dataExample) ? parseInt(dataExample.value) : -1;
 			
 			this.example.setState(state);
+		});
+	}
+
+	initArrows() {
+		const prev = document.querySelector('.touch-arrows .prev');
+		const next = document.querySelector('.touch-arrows .next');
+
+		prev.addEventListener('touchstart', (e) => {
+			Reveal.prev();
+			e.preventDefault();
+		});
+
+		next.addEventListener('touchstart', (e) => {
+			Reveal.next();
+			e.preventDefault();
 		});
 	}
 }

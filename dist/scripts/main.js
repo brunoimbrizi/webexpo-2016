@@ -391,6 +391,7 @@ var AppView = function () {
 
 		this.initReveal();
 		this.initSketch();
+		this.initArrows();
 	}
 
 	_createClass(AppView, [{
@@ -480,6 +481,22 @@ var AppView = function () {
 				var state = dataExample ? parseInt(dataExample.value) : -1;
 
 				_this2.example.setState(state);
+			});
+		}
+	}, {
+		key: 'initArrows',
+		value: function initArrows() {
+			var prev = document.querySelector('.touch-arrows .prev');
+			var next = document.querySelector('.touch-arrows .next');
+
+			prev.addEventListener('touchstart', function (e) {
+				Reveal.prev();
+				e.preventDefault();
+			});
+
+			next.addEventListener('touchstart', function (e) {
+				Reveal.next();
+				e.preventDefault();
 			});
 		}
 	}]);
@@ -687,14 +704,25 @@ var ExampleRibbon = function () {
 	}, {
 		key: 'followMouse',
 		value: function followMouse(follow, useRect) {
+			// if mobile device, show nav arrows
+			var isMobileDevice = /(iphone|ipod|ipad|android)/gi.test(navigator.userAgent);
+			document.querySelector('.touch-arrows').style.display = follow && isMobileDevice ? 'block' : 'none';
+
 			document.querySelector('.reveal').style.pointerEvents = follow ? 'none' : '';
 			if (!follow) return;
 
-			if (useRect && this.ctx.mouse.x < this.rect.x * this.ctx.width) return;
-			if (!this.ctx.mouse.x && !this.ctx.mouse.y) return;
+			if (!this.ctx.touches[0]) return;
 
-			this.points[0].x = this.ctx.mouse.x - this.rect.x * this.ctx.width - this.rect.w * this.ctx.width * 0.5;
-			this.points[0].y = this.ctx.mouse.y - this.rect.y * this.ctx.height - this.rect.h * this.ctx.height * 0.5;
+			var touch = { x: this.ctx.touches[0].x, y: this.ctx.touches[0].y };
+
+			touch.x /= window.devicePixelRatio;
+			touch.y /= window.devicePixelRatio;
+
+			if (useRect && touch.x < this.rect.x * this.ctx.width) return;
+			if (!touch.x && !touch.y) return;
+
+			this.points[0].x = touch.x - this.rect.x * this.ctx.width - this.rect.w * this.ctx.width * 0.5;
+			this.points[0].y = touch.y - this.rect.y * this.ctx.height - this.rect.h * this.ctx.height * 0.5;
 		}
 	}, {
 		key: 'updateDry',
@@ -917,7 +945,7 @@ var ExampleRibbon = function () {
 
 					break;
 				case 11:
-					this.ctx.clear();
+					this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 					this.ctx.globalCompositeOperation = 'lighter';
 					this.color = this.colorB;
 					var _iteratorNormalCompletion7 = true;
@@ -945,7 +973,7 @@ var ExampleRibbon = function () {
 					}
 
 				case 10:
-					this.ctx.clear();
+					this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 					this.ctx.autoclear = false;
 					break;
 				case 12:

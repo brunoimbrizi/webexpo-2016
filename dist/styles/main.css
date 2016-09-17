@@ -9,3 +9,28 @@ body {
 	top: 0;
 	left: 0;
 }
+
+.touch-arrows {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	font-family: 'sans-serif';
+	font-size: 1.5em;
+	z-index: 99;
+	display: none;
+}
+
+.touch-arrows a {
+	color: #FFF;
+	text-decoration: none;
+	margin: 2% 5%;
+}
+
+.touch-arrows .prev {
+	float: left;
+}
+
+.touch-arrows .next {
+	text-align: right;
+	float: right;
+}
