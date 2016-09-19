@@ -201,8 +201,8 @@ for (let i = 0; i < points.length; i++) {
 ctx.beginPath();
 ctx.moveTo(points[0].x, points[0].y);
 
-for (let i = 1; i <= points.length; i++) {
-	const pp = points[i - 1];
+for (let i = 0; i <= points.length - 1; i++) {
+	const np = points[i + 1];
 	ctx.lineTo(pp.x, pp.y);
 }
 
@@ -330,8 +330,8 @@ ctx.strokeStyle = 'rgba(255, 170, 0, 0.1)';
 				</section>
 
 				<section data-background="img/kingsman-01.jpg">
-					<h2>Kingsman</h2>
-					<p><a href="http://www.kingsmanmovie.com/becomeakingsman/">kingsmanmovie.com</a></p>
+					<h3>Kingsman</h3>
+					<p>2014 / <a href="http://www.kingsmanmovie.com/becomeakingsman/">kingsmanmovie.com</a></p>
 				</section>
 
 				<section data-background="img/kingsman-02.jpg">
@@ -360,8 +360,8 @@ ctx.strokeStyle = 'rgba(255, 170, 0, 0.1)';
 				</section>
 
 				<section data-background="img/an-deiner-seite-01.jpg">
-					<h2>An Deiner Seite</h2>
-					<p><a href="http://andeinerseite.video/">andeinerseite.video</a></p>
+					<h3>An Deiner Seite</h3>
+					<p>2016 / <a href="http://andeinerseite.video/">andeinerseite.video</a></p>
 				</section>
 
 				<section data-background="img/an-deiner-seite-02.jpg">

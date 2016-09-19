@@ -270,6 +270,12 @@ export default class ExampleRibbon {
 					} });
 				}
 				break;
+			case 3:
+				for (let p of this.points) {
+					delay = p.index * 0.02;
+					TweenMax.to(p, time, { x: 0, y: p.index * this.distance, ease, delay });
+				}
+				break;
 			case 4:
 				for (let p of this.points) {
 					delay = p.index * 0.02;

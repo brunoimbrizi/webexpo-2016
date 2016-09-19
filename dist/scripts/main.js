@@ -798,8 +798,8 @@ var ExampleRibbon = function () {
 
 			try {
 				for (var _iterator2 = this.points[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-					var _p4 = _step2.value;
-					_p4.radius = 5;
+					var _p5 = _step2.value;
+					_p5.radius = 5;
 				}
 			} catch (err) {
 				_didIteratorError2 = true;
@@ -916,7 +916,7 @@ var ExampleRibbon = function () {
 					}
 
 					break;
-				case 4:
+				case 3:
 					var _iteratorNormalCompletion6 = true;
 					var _didIteratorError6 = false;
 					var _iteratorError6 = undefined;
@@ -926,7 +926,7 @@ var ExampleRibbon = function () {
 							var _p2 = _step6.value;
 
 							delay = _p2.index * 0.02;
-							TweenMax.to(_p2, time, { x: random(-50, 50), y: _p2.index * this.distance, ease: ease, delay: delay });
+							TweenMax.to(_p2, time, { x: 0, y: _p2.index * this.distance, ease: ease, delay: delay });
 						}
 					} catch (err) {
 						_didIteratorError6 = true;
@@ -944,10 +944,7 @@ var ExampleRibbon = function () {
 					}
 
 					break;
-				case 11:
-					this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-					this.ctx.globalCompositeOperation = 'lighter';
-					this.color = this.colorB;
+				case 4:
 					var _iteratorNormalCompletion7 = true;
 					var _didIteratorError7 = false;
 					var _iteratorError7 = undefined;
@@ -955,7 +952,9 @@ var ExampleRibbon = function () {
 					try {
 						for (var _iterator7 = this.points[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
 							var _p3 = _step7.value;
-							_p3.radius = 2;
+
+							delay = _p3.index * 0.02;
+							TweenMax.to(_p3, time, { x: random(-50, 50), y: _p3.index * this.distance, ease: ease, delay: delay });
 						}
 					} catch (err) {
 						_didIteratorError7 = true;
@@ -968,6 +967,35 @@ var ExampleRibbon = function () {
 						} finally {
 							if (_didIteratorError7) {
 								throw _iteratorError7;
+							}
+						}
+					}
+
+					break;
+				case 11:
+					this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+					this.ctx.globalCompositeOperation = 'lighter';
+					this.color = this.colorB;
+					var _iteratorNormalCompletion8 = true;
+					var _didIteratorError8 = false;
+					var _iteratorError8 = undefined;
+
+					try {
+						for (var _iterator8 = this.points[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+							var _p4 = _step8.value;
+							_p4.radius = 2;
+						}
+					} catch (err) {
+						_didIteratorError8 = true;
+						_iteratorError8 = err;
+					} finally {
+						try {
+							if (!_iteratorNormalCompletion8 && _iterator8.return) {
+								_iterator8.return();
+							}
+						} finally {
+							if (_didIteratorError8) {
+								throw _iteratorError8;
 							}
 						}
 					}
