@@ -1,6 +1,6 @@
 # webexpo-2016
 
-https://brunoimbrizi.github.io/webexpo-2016/dist
+https://brunoimbrizi.github.io/webexpo-2016/
 
 My presentation at [WebExpo 2016](https://webexpo.net/prague2016/).
 
