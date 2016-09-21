@@ -99,11 +99,13 @@ export default class AppView {
 		prev.addEventListener('touchstart', (e) => {
 			Reveal.prev();
 			e.preventDefault();
+			return false;
 		});
 
 		next.addEventListener('touchstart', (e) => {
 			Reveal.next();
 			e.preventDefault();
+			return false;
 		});
 	}
 }
