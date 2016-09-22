@@ -143,7 +143,7 @@ export default class ExampleRibbon {
 			const p = this.points[i];
 			const pp = (i === 0) ? p : this.points[i - 1];
 			const np = (i === this.points.length - 1) ? p : this.points[i + 1];
-			const offset = 10;
+			const offset = 20;
 
 			const cp1 = { x: pp.x + cos(pp.angle + HALF_PI) * offset, y: pp.y + sin(pp.angle + HALF_PI) * offset };
 			const cp2 = { x: p.x - cos(p.angle + HALF_PI) * offset, y: p.y - sin(p.angle + HALF_PI) * offset };

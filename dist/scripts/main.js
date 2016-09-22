@@ -492,11 +492,13 @@ var AppView = function () {
 			prev.addEventListener('touchstart', function (e) {
 				Reveal.prev();
 				e.preventDefault();
+				return false;
 			});
 
 			next.addEventListener('touchstart', function (e) {
 				Reveal.next();
 				e.preventDefault();
+				return false;
 			});
 		}
 	}]);
@@ -691,7 +693,7 @@ var ExampleRibbon = function () {
 				var p = this.points[i];
 				var pp = i === 0 ? p : this.points[i - 1];
 				var np = i === this.points.length - 1 ? p : this.points[i + 1];
-				var offset = 10;
+				var offset = 20;
 
 				var cp1 = { x: pp.x + cos(pp.angle + HALF_PI) * offset, y: pp.y + sin(pp.angle + HALF_PI) * offset };
 				var cp2 = { x: p.x - cos(p.angle + HALF_PI) * offset, y: p.y - sin(p.angle + HALF_PI) * offset };
