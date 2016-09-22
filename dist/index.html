@@ -201,9 +201,9 @@ for (let i = 0; i < points.length; i++) {
 ctx.beginPath();
 ctx.moveTo(points[0].x, points[0].y);
 
-for (let i = 0; i <= points.length - 1; i++) {
+for (let i = 0; i < points.length - 1; i++) {
 	const np = points[i + 1];
-	ctx.lineTo(pp.x, pp.y);
+	ctx.lineTo(np.x, np.y);
 }
 
 ctx.stroke();
@@ -362,6 +362,11 @@ ctx.strokeStyle = 'rgba(255, 170, 0, 0.1)';
 				<section data-background="img/an-deiner-seite-01.jpg">
 					<h3>An Deiner Seite</h3>
 					<p>2016 / <a href="http://andeinerseite.video/">andeinerseite.video</a></p>
+				</section>
+
+				<section data-background="img/an-deiner-seite-05.jpg">
+					<h3>Interactive video</h3>
+					<p>Past / Present</p>
 				</section>
 
 				<section data-background="img/an-deiner-seite-02.jpg">
