@@ -156,8 +156,8 @@ export default class ExampleRibbon {
 
 	followMouse(follow, useRect) {
 		// if mobile device, show nav arrows
-		const isMobileDevice = /(iphone|ipod|ipad|android)/gi.test(navigator.userAgent);
-		document.querySelector('.touch-arrows').style.display = (follow && isMobileDevice) ? 'block' : 'none';
+		// const isMobileDevice = /(iphone|ipod|ipad|android)/gi.test(navigator.userAgent);
+		// document.querySelector('.touch-arrows').style.display = (follow && isMobileDevice) ? 'block' : 'none';
 
 		document.querySelector('.reveal').style.pointerEvents = (follow) ? 'none' : '';
 		if (!follow) return;

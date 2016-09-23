@@ -93,29 +93,44 @@ export default class AppView {
 	}
 
 	initArrows() {
-		const prev = document.querySelector('.touch-arrows .prev');
-		const next = document.querySelector('.touch-arrows .next');
+		// if mobile device, show nav arrows
+		const isMobileDevice = /(iphone|ipod|ipad|android)/gi.test(navigator.userAgent);
+		if (!isMobileDevice) return;
+		// return;
+
+		document.querySelector('.mobile-controls').style.display = 'block';
+		// document.querySelector('.reveal').style.display = 'none';
+		// document.querySelector('#container').style.display = 'none';
+		return;
+
+		const prev = document.querySelector('.mobile-controls .prev');
+		const next = document.querySelector('.mobile-controls .next');
 
 		prev.addEventListener('touchstart', (e) => {
-			e.preventDefault();
-			return false;
+			// e.preventDefault();
+			// return false;
 		});
 
 		next.addEventListener('touchstart', (e) => {
-			e.preventDefault();
-			return false;
+			// e.preventDefault();
+			// return false;
 		});
 
 		prev.addEventListener('touchend', (e) => {
-			Reveal.prev();
-			e.preventDefault();
-			return false;
+			// Reveal.prev();
+			const index = parseInt(window.location.hash.substr(2)) || 0;
+			prev.setAttribute('href', window.location.origin + '/#/' + (index - 1));
+			// e.preventDefault();
+			return true;
 		});
 
 		next.addEventListener('touchend', (e) => {
-			Reveal.next();
-			e.preventDefault();
-			return false;
+			// Reveal.next();
+			const index = parseInt(window.location.hash.substr(2)) || 0;
+			next.setAttribute('href', window.location.origin + '/#/' + (index + 1));
+   			// return true;
+			// e.preventDefault();
+			return true;
 		});
 	}
 }

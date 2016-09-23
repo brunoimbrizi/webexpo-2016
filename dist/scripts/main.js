@@ -486,29 +486,44 @@ var AppView = function () {
 	}, {
 		key: 'initArrows',
 		value: function initArrows() {
-			var prev = document.querySelector('.touch-arrows .prev');
-			var next = document.querySelector('.touch-arrows .next');
+			// if mobile device, show nav arrows
+			var isMobileDevice = /(iphone|ipod|ipad|android)/gi.test(navigator.userAgent);
+			if (!isMobileDevice) return;
+			// return;
+
+			document.querySelector('.mobile-controls').style.display = 'block';
+			// document.querySelector('.reveal').style.display = 'none';
+			// document.querySelector('#container').style.display = 'none';
+			return;
+
+			var prev = document.querySelector('.mobile-controls .prev');
+			var next = document.querySelector('.mobile-controls .next');
 
 			prev.addEventListener('touchstart', function (e) {
-				e.preventDefault();
-				return false;
+				// e.preventDefault();
+				// return false;
 			});
 
 			next.addEventListener('touchstart', function (e) {
-				e.preventDefault();
-				return false;
+				// e.preventDefault();
+				// return false;
 			});
 
 			prev.addEventListener('touchend', function (e) {
-				Reveal.prev();
-				e.preventDefault();
-				return false;
+				// Reveal.prev();
+				var index = parseInt(window.location.hash.substr(2)) || 0;
+				prev.setAttribute('href', window.location.origin + '/#/' + (index - 1));
+				// e.preventDefault();
+				return true;
 			});
 
 			next.addEventListener('touchend', function (e) {
-				Reveal.next();
-				e.preventDefault();
-				return false;
+				// Reveal.next();
+				var index = parseInt(window.location.hash.substr(2)) || 0;
+				next.setAttribute('href', window.location.origin + '/#/' + (index + 1));
+				// return true;
+				// e.preventDefault();
+				return true;
 			});
 		}
 	}]);
@@ -717,8 +732,8 @@ var ExampleRibbon = function () {
 		key: 'followMouse',
 		value: function followMouse(follow, useRect) {
 			// if mobile device, show nav arrows
-			var isMobileDevice = /(iphone|ipod|ipad|android)/gi.test(navigator.userAgent);
-			document.querySelector('.touch-arrows').style.display = follow && isMobileDevice ? 'block' : 'none';
+			// const isMobileDevice = /(iphone|ipod|ipad|android)/gi.test(navigator.userAgent);
+			// document.querySelector('.touch-arrows').style.display = (follow && isMobileDevice) ? 'block' : 'none';
 
 			document.querySelector('.reveal').style.pointerEvents = follow ? 'none' : '';
 			if (!follow) return;
