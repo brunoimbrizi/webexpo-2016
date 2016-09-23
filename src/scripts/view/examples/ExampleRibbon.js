@@ -20,10 +20,10 @@ export default class ExampleRibbon {
 	update() {
 		switch(this.state) {
 			case 5:
-				this.followMouse(true, true);
+				this.followMouse(true);
 				break;
 			case 6:
-				this.followMouse(true, true);
+				this.followMouse(true);
 				this.updateDry(0, 2);
 				break;
 			case 7:
