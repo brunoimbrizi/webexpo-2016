@@ -97,12 +97,22 @@ export default class AppView {
 		const next = document.querySelector('.touch-arrows .next');
 
 		prev.addEventListener('touchstart', (e) => {
-			Reveal.prev();
 			e.preventDefault();
 			return false;
 		});
 
 		next.addEventListener('touchstart', (e) => {
+			e.preventDefault();
+			return false;
+		});
+
+		prev.addEventListener('touchend', (e) => {
+			Reveal.prev();
+			e.preventDefault();
+			return false;
+		});
+
+		next.addEventListener('touchend', (e) => {
 			Reveal.next();
 			e.preventDefault();
 			return false;

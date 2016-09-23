@@ -490,12 +490,22 @@ var AppView = function () {
 			var next = document.querySelector('.touch-arrows .next');
 
 			prev.addEventListener('touchstart', function (e) {
-				Reveal.prev();
 				e.preventDefault();
 				return false;
 			});
 
 			next.addEventListener('touchstart', function (e) {
+				e.preventDefault();
+				return false;
+			});
+
+			prev.addEventListener('touchend', function (e) {
+				Reveal.prev();
+				e.preventDefault();
+				return false;
+			});
+
+			next.addEventListener('touchend', function (e) {
 				Reveal.next();
 				e.preventDefault();
 				return false;
