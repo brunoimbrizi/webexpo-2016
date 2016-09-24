@@ -46,3 +46,21 @@ body {
 .mobile-controls a:active {
 	background: rgba(60, 60, 60, 0.5);
 }
+
+.mobile-controls .btn-doge {
+	clear: both;
+    width: 92%;
+    background-image: url(../img/doge.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 120px;
+    /*margin-top: 60px;*/
+}
+
+.doge {
+	position: absolute;
+	z-index: 9;
+	bottom: -768px;
+	right: 0;
+}

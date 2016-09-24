@@ -101,8 +101,9 @@ export default class AppView {
 		document.querySelector('.mobile-controls').style.display = 'block';
 		// document.querySelector('.reveal').style.display = 'none';
 		// document.querySelector('#container').style.display = 'none';
-		return;
+		// return;
 
+		/*
 		const prev = document.querySelector('.mobile-controls .prev');
 		const next = document.querySelector('.mobile-controls .next');
 
@@ -132,5 +133,28 @@ export default class AppView {
 			// e.preventDefault();
 			return true;
 		});
+		*/
 	}
+
+	toggleDoge() {
+		if (this.dogeOn) this.hideDoge();
+		else this.showDoge();
+	}
+
+	showDoge() {
+		this.dogeOn = true;
+		const doge = document.querySelector('.doge');
+
+		const rnd = Math.random();
+
+		if (rnd > 0.5) TweenMax.to(doge, 0.5, { bottom: -10, ease: Bounce.easeOut });
+		else TweenMax.to(doge, 1.5, { bottom: -200, ease: Quart.easeOut });
+	}
+
+	hideDoge() {
+		this.dogeOn = false;
+		const doge = document.querySelector('.doge');
+		TweenMax.to(doge, 0.5, { bottom: -768, ease: Expo.easeIn });
+	}
+
 }

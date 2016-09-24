@@ -494,37 +494,57 @@ var AppView = function () {
 			document.querySelector('.mobile-controls').style.display = 'block';
 			// document.querySelector('.reveal').style.display = 'none';
 			// document.querySelector('#container').style.display = 'none';
-			return;
+			// return;
 
-			var prev = document.querySelector('.mobile-controls .prev');
-			var next = document.querySelector('.mobile-controls .next');
+			/*
+   const prev = document.querySelector('.mobile-controls .prev');
+   const next = document.querySelector('.mobile-controls .next');
+   		prev.addEventListener('touchstart', (e) => {
+   	// e.preventDefault();
+   	// return false;
+   });
+   		next.addEventListener('touchstart', (e) => {
+   	// e.preventDefault();
+   	// return false;
+   });
+   		prev.addEventListener('touchend', (e) => {
+   	// Reveal.prev();
+   	const index = parseInt(window.location.hash.substr(2)) || 0;
+   	prev.setAttribute('href', window.location.origin + '/#/' + (index - 1));
+   	// e.preventDefault();
+   	return true;
+   });
+   		next.addEventListener('touchend', (e) => {
+   	// Reveal.next();
+   	const index = parseInt(window.location.hash.substr(2)) || 0;
+   	next.setAttribute('href', window.location.origin + '/#/' + (index + 1));
+    			// return true;
+   	// e.preventDefault();
+   	return true;
+   });
+   */
+		}
+	}, {
+		key: 'toggleDoge',
+		value: function toggleDoge() {
+			if (this.dogeOn) this.hideDoge();else this.showDoge();
+		}
+	}, {
+		key: 'showDoge',
+		value: function showDoge() {
+			this.dogeOn = true;
+			var doge = document.querySelector('.doge');
 
-			prev.addEventListener('touchstart', function (e) {
-				// e.preventDefault();
-				// return false;
-			});
+			var rnd = Math.random();
 
-			next.addEventListener('touchstart', function (e) {
-				// e.preventDefault();
-				// return false;
-			});
-
-			prev.addEventListener('touchend', function (e) {
-				// Reveal.prev();
-				var index = parseInt(window.location.hash.substr(2)) || 0;
-				prev.setAttribute('href', window.location.origin + '/#/' + (index - 1));
-				// e.preventDefault();
-				return true;
-			});
-
-			next.addEventListener('touchend', function (e) {
-				// Reveal.next();
-				var index = parseInt(window.location.hash.substr(2)) || 0;
-				next.setAttribute('href', window.location.origin + '/#/' + (index + 1));
-				// return true;
-				// e.preventDefault();
-				return true;
-			});
+			if (rnd > 0.5) TweenMax.to(doge, 0.5, { bottom: -10, ease: Bounce.easeOut });else TweenMax.to(doge, 1.5, { bottom: -200, ease: Quart.easeOut });
+		}
+	}, {
+		key: 'hideDoge',
+		value: function hideDoge() {
+			this.dogeOn = false;
+			var doge = document.querySelector('.doge');
+			TweenMax.to(doge, 0.5, { bottom: -768, ease: Expo.easeIn });
 		}
 	}]);
 
